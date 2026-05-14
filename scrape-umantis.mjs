@@ -123,14 +123,14 @@ async function scrapeCompany(company, filters, seenUrls) {
   const html = await res.text();
   const jobs  = parseUmantisHTML(html, baseUrl, company.name);
 
-  console.log(`${company.name}: ${jobs.length} oferta(s) total`);
+  console.log(`${company.name}: ${jobs.length} job(s) total`);
 
   const newOffers = jobs
     .filter(j => titleMatches(j.title, filters))
     .filter(j => locationMatches(j.location, filters))
     .filter(j => !seenUrls.has(j.url));
 
-  console.log(`${company.name}: ${newOffers.length} nueva(s) relevante(s)`);
+  console.log(`${company.name}: ${newOffers.length} new relevant match(es)`);
   newOffers.forEach(o => console.log(`  + ${o.title} | ${o.location || 'N/A'}`));
 
   return newOffers;
@@ -152,10 +152,10 @@ async function main() {
 
   if (allNew.length > 0 && !DRY_RUN) {
     appendToHistory(allNew);
-    console.log(`\nGuardado ${allNew.length} oferta(s) en scan-history.tsv`);
+    console.log(`\nSaved ${allNew.length} new job(s) to scan-history.tsv`);
   }
 
-  if (DRY_RUN) console.log('\n(dry run — nada escrito)');
+  if (DRY_RUN) console.log('\n(dry run — nothing written)');
 }
 
 main().catch(err => { console.error('Fatal:', err.message); process.exit(1); });

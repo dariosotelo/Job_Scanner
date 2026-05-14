@@ -114,24 +114,24 @@ async function scrapeUBS() {
 
   await browser.close();
 
-  console.log(`UBS: ${allJobs.length} oferta(s) total en la página`);
+  console.log(`UBS: ${allJobs.length} job(s) total`);
 
   const newOffers = allJobs
     .filter(j => titleMatches(j.title, filters))
     .filter(j => locationMatches(j.location, filters))
     .filter(j => !seenUrls.has(j.url));
 
-  console.log(`UBS: ${newOffers.length} nueva(s) relevante(s) tras filtros`);
+  console.log(`UBS: ${newOffers.length} new relevant match(es) after filters`);
 
   if (newOffers.length > 0) {
     if (!DRY_RUN) {
       appendToHistory(newOffers);
-      console.log('Guardado en scan-history.tsv');
+      console.log('Saved to scan-history.tsv');
     }
     newOffers.forEach(o => console.log(`  + ${o.title} | ${o.location || 'N/A'}`));
   }
 
-  if (DRY_RUN) console.log('(dry run — nada escrito)');
+  if (DRY_RUN) console.log('(dry run — nothing written)');
   return newOffers;
 }
 

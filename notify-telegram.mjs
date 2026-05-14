@@ -113,11 +113,11 @@ async function main() {
   const jobs = readTodaysNewJobs();
 
   if (jobs.length === 0) {
-    console.log(`Toy'que to' tranquilo — no salió na' nuevo hoy (${today()}). Sin mensaje.`);
+    console.log(`No new jobs today (${today()}). No message sent.`);
     return;
   }
 
-  console.log(`Salieron ${jobs.length} vaina(s) nueva(s) — mandando mensaje a Telegram...`);
+  console.log(`${jobs.length} new job(s) found — sending Telegram message...`);
 
   const CHUNK_SIZE = 10;
   const allUrls = jobs.map(j => j.url);
@@ -125,11 +125,11 @@ async function main() {
   for (let i = 0; i < jobs.length; i += CHUNK_SIZE) {
     const chunk = jobs.slice(i, i + CHUNK_SIZE);
     await sendTelegramMessage(formatMessage(chunk));
-    console.log(`  Enviado batch ${Math.floor(i / CHUNK_SIZE) + 1} (${chunk.length} oferta(s))`);
+    console.log(`  Sent batch ${Math.floor(i / CHUNK_SIZE) + 1} (${chunk.length} job(s))`);
   }
 
   saveNotifiedUrls(allUrls);
-  console.log('¡Listo bróder!');
+  console.log('Done.');
 }
 
 main().catch(err => {
