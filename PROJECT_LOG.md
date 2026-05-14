@@ -611,13 +611,13 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 | Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders |
 | Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
 | Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
-| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners |
 | SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
 | SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
 | prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
 | Phenom People | `scrape-phenom.mjs` | Allianz |
 
-**Total companies with automated daily scanning: 20**
+**Total companies with automated daily scanning: 21**
 
 ---
 
@@ -700,8 +700,24 @@ same filter/dedup/history pattern as all other scrapers.
 All scanner work happens in `Job_Scanner/`. The `Career_Bot/career-ops/` folder is only
 relevant for its CV evaluation and interview prep features (separate functionality).
 
+### 29. LGT Capital Partners added to Workday scraper — 2026-05-14
+
+**Context:** There are two separate LGT entities:
+
+| Entity | URL | ATS | Notes |
+|--------|-----|-----|-------|
+| **LGT Private Bank** | lgt.com/global-en/career/jobs | Proprietary CMS (JS-rendered) | Private banking, wealth management. Needs Playwright — deferred. |
+| **LGT Capital Partners** | lgtcp.wd502.myworkdayjobs.com | Workday (wd502 instance) | Institutional alternatives (~$100B AUM). More relevant. Added now. |
+
+They are both owned by the Princely Family of Liechtenstein but operate as independent entities. LGT CP focuses on private equity, hedge fund allocation, and infrastructure — more relevant for quant/investment roles.
+
+**Workday config:** `tenant: lgtcp`, `instance: wd502`, `board: lgtcpcurrentvacancies`
+**Test result:** 11 jobs found, 0 matches (mostly tech/ops roles at time of scan).
+
+---
+
 ### To-do / Next steps
-- [ ] Expand SuccessFactors scraper: test ZKB, LGT Capital Partners, and other SF companies
+- [ ] Add LGT Private Bank (lgt.com) — proprietary JS-rendered CMS, needs Playwright
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active, Swiss Re, Zurich Insurance)
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
