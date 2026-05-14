@@ -193,6 +193,36 @@ scraping. To automate them, the Workday board name needs to be found from their 
 
 ---
 
+## Resources for finding more companies
+
+### quant-jobs-zurich (community-maintained list)
+https://github.com/adrische/quant-jobs-zurich
+
+Comprehensive curated list of quant finance employers in Zurich and Switzerland,
+organized by category (banks, hedge funds, asset managers, insurers, consultancies).
+Also includes a separate AI jobs list: https://github.com/adrische/AI-Jobs-Switzerland
+
+Use this list when running out of companies to add. Check each career URL for
+Workday/Greenhouse/Umantis patterns to determine if automation is possible.
+
+**Leads already extracted from this list (not yet added to scanner):**
+
+| Company | ATS found | URL from list |
+|---------|-----------|---------------|
+| Julius Baer | Workday (`juliusbaer.wd3`, board: `External`) | `juliusbaer.wd3.myworkdayjobs.com/External` |
+| Lombard Odier | Workday (`lombardodier.wd3`, board: `Lombard_Odier_Careers`) | `lombardodier.wd3.myworkdayjobs.com/Lombard_Odier_Careers` |
+| Pictet | SuccessFactors (company code: `banquepict`) | `career5.successfactors.eu/career?company=banquepict` |
+| ZKB | refline.ch (custom ATS, needs scraper) | `apply.refline.ch/792841/search.html` |
+| Citi Zurich | Taleo | `jobs.citi.com/search-jobs/Zurich` |
+| LGT Capital Partners | Custom | `lgtcp.com/en/careers/current-vacancies/` |
+| Squarepoint Capital | Custom | `squarepoint-capital.com/open-opportunities` (Zug) |
+| Worldquant | Custom | `worldquant.com/career-listing/?location=zug-switzerland` |
+| RAM Active Investments | Custom | `ram-ai.com/de/careers/` |
+| Swiss Re | Custom | `careers.swissre.com` |
+| Zurich Insurance | Custom | `careers.zurich.com` |
+
+---
+
 ## How to automate a websearch company
 
 1. Visit their careers page and search for any open role
