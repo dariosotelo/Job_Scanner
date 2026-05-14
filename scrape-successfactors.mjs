@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /**
  * scrape-successfactors.mjs
- * Generic scraper for companies using SAP SuccessFactors Career Site.
- * Uses Playwright to render the page and extract jobs from the DOM,
- * then paginates by clicking "Next" until all pages are exhausted.
+ * Playwright scraper for JS-rendered careers pages.
+ * Currently supports two layouts:
  *
- * Add any SuccessFactors company to the COMPANIES list below.
- * To find the company code: look at the URL of their careers page:
- *   https://career{N}.successfactors.eu/career?company={CODE}&...
- *   The CODE and host (career{N}.successfactors.eu) are what you need.
+ *   SF Classic (career012): SAP SuccessFactors, table-based
+ *     Required fields: { code, host, name }
+ *     code = ?company= value from URL, host = career{N}.successfactors.eu
+ *
+ *   LGT (CoreMedia CMS): URL-paginated article list
+ *     Required fields: { layout: 'lgt', paginationBase, name }
+ *     paginationBase = URL without ?pageNum=N suffix
  *
  * Usage:
  *   node scrape-successfactors.mjs            # real run
@@ -26,12 +28,10 @@ _require('dotenv').config();
 const SCAN_HISTORY_PATH = 'data/scan-history.tsv';
 const DRY_RUN = process.argv.includes('--dry-run');
 
-// ── Companies using SuccessFactors ───────────────────────────────
-// code: the ?company= value from their careers URL
-// host: the successfactors subdomain (career012, career5, etc.)
-// name: display name
-
 const COMPANIES = [
+  // ── SAP SuccessFactors (SF Classic, career012 layout) ────────────
+  // code: the ?company= value from their careers URL
+  // host: the successfactors subdomain (career012, career5, etc.)
   {
     code: 'banquepict',
     host: 'career012.successfactors.eu',
@@ -85,18 +85,15 @@ function appendToHistory(offers) {
 }
 
 // ── DOM extraction ────────────────────────────────────────────────
-// SF Classic (career012): table-based layout with jobId attributes
-// SF Modern  (career5):   list-based layout with data-job-id attributes
-// We try both and take whichever returns results.
 
 async function extractJobsFromPage(page, company) {
   return await page.evaluate(({ host, code }) => {
     const jobs = [];
 
     // ── Strategy 1: SF Classic (career012) ───────────────────────
-    // Rows: <tr class="jobResultItem">
+    // <tr class="jobResultItem">
     //   <td><a class="jobTitle" href="...career_job_req_id=123...">Title</a></td>
-    //   <td><span class="facetTxt">Location: Geneva, Switzerland</span></td>
+    //   <td><span class="facetTxt">Location:City, Country</span></td>
     document.querySelectorAll('tr.jobResultItem').forEach(row => {
       const a = row.querySelector('a.jobTitle');
       if (!a) return;
@@ -113,14 +110,14 @@ async function extractJobsFromPage(page, company) {
 
     if (jobs.length > 0) return jobs;
 
-    // ── Strategy 2: Modern SF (career5, list layout) ─────────────
+    // ── Strategy 2: SF Modern (career5, list layout) ─────────────
     // <a class="jobTitle" data-job-id="123">Title</a>
     document.querySelectorAll('[data-job-id]').forEach(el => {
-      const jobId    = el.getAttribute('data-job-id') || el.getAttribute('data-jobid');
-      const title    = el.textContent.trim();
+      const jobId     = el.getAttribute('data-job-id') || el.getAttribute('data-jobid');
+      const title     = el.textContent.trim();
       const container = el.closest('li, [class*="job-item"], [class*="jobItem"]');
-      const locEl    = container?.querySelector('[class*="location"], [class*="Location"]');
-      const location = locEl ? locEl.textContent.trim() : '';
+      const locEl     = container?.querySelector('[class*="location"], [class*="Location"]');
+      const location  = locEl ? locEl.textContent.trim() : '';
       const url = `https://${host}/career?company=${code}&career_ns=job_application&career_job_req_id=${jobId}`;
       if (title && jobId) jobs.push({ title, location, url });
     });
@@ -129,8 +126,9 @@ async function extractJobsFromPage(page, company) {
   }, { host: company.host, code: company.code });
 }
 
+// ── Pagination ────────────────────────────────────────────────────
+
 async function clickNextPage(page) {
-  // SF pagination: "Next" button or link — try a few selector patterns
   const nextSelectors = [
     'a[title="Next Page"]',
     'a[aria-label="Next Page"]',
@@ -160,35 +158,25 @@ async function clickNextPage(page) {
 // ── Scraper ──────────────────────────────────────────────────────
 
 async function scrapeCompany(company, filters, seenUrls, browser) {
-  const page = await browser.newPage();
+  const page    = await browser.newPage();
+  const allJobs = [];
 
   const searchUrl = `https://${company.host}/career?company=${company.code}&career_ns=job_listing_summary&navBarLevel=JOB_SEARCH`;
-
   await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-
-  // Wait for the job list to render — try multiple possible container selectors
   await page.waitForSelector(
-    'table.careersTable, td.colTitle, [data-job-id], .jobListItem, [class*="careersItem"]',
+    'table.careersTable, td.colTitle, [data-job-id], .jobListItem, tr.jobResultItem',
     { timeout: 15_000 }
   ).catch(() => {});
-
   await page.waitForTimeout(1500);
 
-  const allJobs = [];
   let pageNum = 1;
-
   while (true) {
     const pageJobs = await extractJobsFromPage(page, company);
     allJobs.push(...pageJobs);
-
     if (pageJobs.length === 0) break;
-
     const hasNext = await clickNextPage(page);
     if (!hasNext) break;
-    pageNum++;
-
-    // Safety cap — SF instances rarely exceed 20 pages
-    if (pageNum > 20) break;
+    if (++pageNum > 20) break;
   }
 
   await page.close();
