@@ -67,6 +67,16 @@ title_filter:
     - Vice President
     - Managing Director
     - Head of
+    # French-language postings — remove these if you want French job titles
+    - Analyste
+    - Stagiaire
+    - Alternance
+    - Alternant
+    - Responsable
+    - Gestionnaire
+    - "Chargé"
+    - "Ingénieur"
+    - Conseiller
     # Add your own exclusions here
 
 # ── Tracked companies ─────────────────────────────────────────────────────────
@@ -117,6 +127,16 @@ tracked_companies:
     careers_url: https://www.flowtraders.com/careers
     scan_method: greenhouse-api
     api: https://boards-api.greenhouse.io/v1/boards/flowtraders/jobs
+
+  - name: Winton Group
+    careers_url: https://www.winton.com/careers
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/winton/jobs
+
+  - name: Marshall Wace
+    careers_url: https://www.mwam.com/careers
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/marshallwace/jobs
 
   # ── Playwright scraper ───────────────────────────────────────────────────
   - name: UBS
