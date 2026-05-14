@@ -6,7 +6,7 @@ cd "$REPO_DIR"
 
 LOG="$REPO_DIR/data/daily-scan.log"
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando escaneo..." >> "$LOG"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting scan..." >> "$LOG"
 
 # 1. Zero-token API scanner (Greenhouse/Ashby/Lever companies)
 node scan.mjs >> "$LOG" 2>&1
@@ -29,7 +29,10 @@ node scrape-prospective.mjs >> "$LOG" 2>&1
 # 7. Phenom People scraper (Allianz and other Phenom People companies)
 node scrape-phenom.mjs >> "$LOG" 2>&1
 
-# 8. Notify Telegram if anything new was found today
+# 8. SuccessFactors Playwright scraper (Pictet and other SF companies)
+node scrape-successfactors.mjs >> "$LOG" 2>&1
+
+# 9. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Listo." >> "$LOG"
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
