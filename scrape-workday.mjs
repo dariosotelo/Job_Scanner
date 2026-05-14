@@ -59,6 +59,12 @@ const COMPANIES = [
     board:    'Lombard_Odier_Careers',
     name:     'Lombard Odier',
   },
+  {
+    tenant:   'lgtcp',
+    instance: 'wd502',
+    board:    'lgtcpcurrentvacancies',
+    name:     'LGT Capital Partners',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];
