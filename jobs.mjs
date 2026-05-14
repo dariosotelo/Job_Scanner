@@ -79,14 +79,26 @@ const METHOD_LABEL = {
   'phenom':         'Phenom People',
 };
 
+function buildJobCountsByCompany() {
+  if (!existsSync(SCAN_HISTORY_PATH)) return {};
+  const lines = readFileSync(SCAN_HISTORY_PATH, 'utf-8').trim().split('\n').slice(1);
+  const counts = {};
+  for (const line of lines) {
+    const [, , , , company] = line.split('\t');
+    if (company) counts[company] = (counts[company] || 0) + 1;
+  }
+  return counts;
+}
+
 function showCompaniesView() {
   if (!existsSync(PORTALS_PATH)) {
     console.error(`${C.red}portals.yml not found.${C.reset} Run: cp portals.example.yml portals.yml`);
     process.exit(1);
   }
 
-  const config   = yaml.load(readFileSync(PORTALS_PATH, 'utf-8'));
+  const config    = yaml.load(readFileSync(PORTALS_PATH, 'utf-8'));
   const companies = config.tracked_companies || [];
+  const jobCounts = buildJobCountsByCompany();
 
   // Group by scan method
   const groups = {};
@@ -102,8 +114,11 @@ function showCompaniesView() {
     const label = METHOD_LABEL[method] || method;
     console.log(`${C.cyan}${C.bold}${label}${C.reset} ${C.gray}(${list.length})${C.reset}`);
     for (const c of list) {
-      const url = c.careers_url ? `  ${C.gray}${c.careers_url}${C.reset}` : '';
-      console.log(`  ${C.green}•${C.reset} ${c.name}${url}`);
+      const count = jobCounts[c.name] || 0;
+      const badge = count > 0
+        ? `${C.green}✔ ${count} job${count === 1 ? '' : 's'} found${C.reset}`
+        : `${C.gray}— no results yet${C.reset}`;
+      console.log(`  ${C.green}•${C.reset} ${C.bold}${c.name}${C.reset}  ${badge}`);
     }
     console.log();
   }
