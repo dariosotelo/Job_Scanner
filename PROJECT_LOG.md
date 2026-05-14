@@ -611,12 +611,13 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 | Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders |
 | Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
 | Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
-| Workday | `scrape-workday.mjs` | Rothschild & Co |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier |
 | SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
 | prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
 | Phenom People | `scrape-phenom.mjs` | Allianz |
 
-**Total companies with automated daily scanning: 14**
+**Total companies with automated daily scanning: 20**
 
 ---
 
@@ -645,13 +646,62 @@ this file. Covers: running the full pipeline, individual scrapers, dry-run mode,
 
 ---
 
+### 28. SuccessFactors Playwright scraper built (`scrape-successfactors.mjs`) — 2026-05-14
+
+**Why:** Pictet Group uses SAP SuccessFactors (career012.successfactors.eu), which is
+fully JavaScript-rendered — no public REST API returns job listings. Plain HTTP fetches
+return shell HTML with no job data.
+
+**Solution:** Generic Playwright scraper that navigates to the SF job listing page, waits
+for the DOM to render, and extracts all jobs by inspecting the live page content. Shares the
+same filter/dedup/history pattern as all other scrapers.
+
+**DOM layout discovery (Pictet / SF Classic, career012):**
+1. Jobs render as `<tr class="jobResultItem">` rows inside a table.
+2. Each row has `<a class="jobTitle" href="...career_job_req_id=XXXXX...">` — the job ID is
+   in the URL query string, not in a dedicated attribute.
+3. Location is in a sibling `<td>` as `<span class="facetTxt">Location:City, Country</span>`.
+4. Pagination uses `<a title="Next Page">` with a `juic.fire(...)` onclick handler; clicking
+   it re-renders the table in place without a page navigation.
+
+**Key implementation details:**
+- `extractJobsFromPage()`: **Strategy 1** (SF Classic) selects `tr.jobResultItem`, extracts
+  job ID via `/career_job_req_id=(\d+)/` regex on the href, strips "Location:" prefix from
+  `span.facetTxt`. **Strategy 2** (SF Modern) falls through to `[data-job-id]` elements for
+  instances on the `career5` subdomain (different layout, unused so far).
+- `clickNextPage()`: tries `a[title="Next Page"]` and `a[aria-label="Next Page"]` first
+  (Pictet), with fallbacks for other SF instances.
+- Single Playwright browser instance shared across all companies in the COMPANIES array.
+- Safety cap: 20 pages per company to prevent infinite loops.
+- `page.evaluate()` only accepts a single argument — both `host` and `code` are passed as
+  `{ host, code }` object (Playwright throws "Too many arguments" otherwise).
+
+**Test result (Pictet, 2026-05-14):**
+- 60 total jobs across 6 pages
+- 4 relevant matches: Risk Manager (London), Investment Analyst, Operational Risk Manager,
+  Outsourcing Risk Manager
+
+**To add another SF company:**
+```js
+// In scrape-successfactors.mjs COMPANIES array:
+{ code: 'COMPANY_CODE', host: 'career012.successfactors.eu', name: 'Company Name' }
+// code = value of ?company= in the careers URL
+// host = the career{N}.successfactors.eu subdomain
+```
+
+**Pipeline integration:** added as step 8 in `daily-scan.sh`.
+`portals.yml` updated: Pictet entry changed from `scan_method: websearch` to
+`scan_method: successfactors`.
+
+---
+
 ### Going forward
 
 All scanner work happens in `Job_Scanner/`. The `Career_Bot/career-ops/` folder is only
 relevant for its CV evaluation and interview prep features (separate functionality).
 
 ### To-do / Next steps
+- [ ] Expand SuccessFactors scraper: test ZKB, LGT Capital Partners, and other SF companies
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] `git init` and push `Job_Scanner` to GitHub
-- [ ] Add more companies as career page URLs are provided
+- [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active, Swiss Re, Zurich Insurance)
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
