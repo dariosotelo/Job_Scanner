@@ -35,6 +35,12 @@ const COMPANIES = [
     board:    'Rothschildandco_Lateral',
     name:     'Rothschild & Co',
   },
+  {
+    tenant:   'vontobel',
+    instance: 'wd3',
+    board:    'Vontobel_External_Career',
+    name:     'Vontobel',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];

@@ -52,6 +52,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 | Company | Tenant | Instance | Board | How found |
 |---------|--------|----------|-------|-----------|
 | Rothschild & Co | `rothschildandco` | `wd3` | `Rothschildandco_Lateral` | Web search for their Workday URL |
+| Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
 - Schroders, DWS, AXA, BNP Paribas, Société Générale, Deutsche Bank, Amundi
@@ -127,6 +128,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Helvetia | prospective.ch | 0 | — | Rate limited during 2026-05-13 debug session |
 | Generali Switzerland | prospective.ch | 0 | — | Rate limited during 2026-05-13 debug session |
 | Allianz | Phenom People | 0 | — | 1 match in dry-run (Portfolio Manager, Frankfurt) |
+| Vontobel | Workday | 0 | — | Added 2026-05-14; 47 jobs live on API |
 
 ---
 
@@ -142,7 +144,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Company | HQ | Why not automated |
 |---------|----|-------------------|
 | Julius Baer | Zurich | Workday — board name not yet found |
-| Vontobel | Zurich | Custom ATS |
+| ~~Vontobel~~ | ~~Zurich~~ | Moved to automated (Workday) — 2026-05-14 |
 | Zürcher Kantonalbank (ZKB) | Zurich | Custom ATS |
 | Pictet Group | Geneva | Custom ATS |
 | Lombard Odier | Geneva | Custom ATS |
