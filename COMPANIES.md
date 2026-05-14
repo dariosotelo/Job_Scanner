@@ -129,6 +129,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Generali Switzerland | prospective.ch | 0 | — | Rate limited during 2026-05-13 debug session |
 | Allianz | Phenom People | 0 | — | 1 match in dry-run (Portfolio Manager, Frankfurt) |
 | Vontobel | Workday | 0 | — | Added 2026-05-14; 47 jobs live on API |
+| Julius Baer | Workday (×2 boards) | 0 | — | Added 2026-05-14; 1 match in dry-run (Market Risk Controller, Zurich) |
 
 ---
 
@@ -209,7 +210,7 @@ Workday/Greenhouse/Umantis patterns to determine if automation is possible.
 
 | Company | ATS found | URL from list |
 |---------|-----------|---------------|
-| Julius Baer | Workday (`juliusbaer.wd3`, board: `External`) | `juliusbaer.wd3.myworkdayjobs.com/External` |
+| ~~Julius Baer~~ | ~~Workday~~ | Moved to automated — boards `JB_Career_Site_Graduates` + `Internships` (2026-05-14) |
 | Lombard Odier | Workday (`lombardodier.wd3`, board: `Lombard_Odier_Careers`) | `lombardodier.wd3.myworkdayjobs.com/Lombard_Odier_Careers` |
 | Pictet | SuccessFactors (company code: `banquepict`) | `career5.successfactors.eu/career?company=banquepict` |
 | ZKB | refline.ch (custom ATS, needs scraper) | `apply.refline.ch/792841/search.html` |

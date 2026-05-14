@@ -41,6 +41,18 @@ const COMPANIES = [
     board:    'Vontobel_External_Career',
     name:     'Vontobel',
   },
+  {
+    tenant:   'juliusbaer',
+    instance: 'wd3',
+    board:    'JB_Career_Site_Graduates',
+    name:     'Julius Baer',
+  },
+  {
+    tenant:   'juliusbaer',
+    instance: 'wd3',
+    board:    'Internships',
+    name:     'Julius Baer',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];
