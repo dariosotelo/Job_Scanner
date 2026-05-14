@@ -1,0 +1,165 @@
+# portals.yml — Job Scanner Configuration
+# Copy this file to portals.yml and edit it for your own search:
+#
+#   cp portals.example.yml portals.yml
+
+# ── Location filter ───────────────────────────────────────────────────────────
+# Jobs are kept only if their location contains at least one entry in allow
+# (or if allow is empty, all locations pass).
+# Jobs whose location contains any entry in block are always excluded.
+
+location_filter:
+  allow:
+    - Zurich
+    - Geneva
+    - Basel
+    - Zug
+    - Lausanne
+    - Switzerland
+    - Bern
+    - Remote
+    - London
+    - Frankfurt
+    - Amsterdam
+    - Paris
+  block:
+    - New York
+    - Chicago
+    - San Francisco
+    - Singapore
+    - Hong Kong
+    - Tokyo
+    - Sydney
+
+# ── Title filter ──────────────────────────────────────────────────────────────
+# positive: job title must match at least one term (case-insensitive substring)
+# negative: job title must NOT match any term (case-insensitive substring)
+
+title_filter:
+  positive:
+    - Quantitative Analyst
+    - Quantitative Researcher
+    - Quant Analyst
+    - Quant Researcher
+    - Quant Developer
+    - Risk Analyst
+    - Risk Manager
+    - Portfolio Analyst
+    - Investment Analyst
+    - Research Analyst
+    - Data Scientist
+    - Financial Engineer
+    - Actuarial
+    # Add your own keywords here
+  negative:
+    - Software Engineer
+    - Full Stack
+    - Frontend
+    - Backend
+    - DevOps
+    - Sales
+    - Relationship Manager
+    - HR
+    - Marketing
+    - Recruiter
+    - Senior
+    - Director
+    - Vice President
+    - Managing Director
+    - Head of
+    # Add your own exclusions here
+
+# ── Tracked companies ─────────────────────────────────────────────────────────
+# Each entry documents a company and which scraper handles it.
+# scan_method values:
+#   greenhouse-api  → scan.mjs reads the api: field directly
+#   umantis         → scrape-umantis.mjs (add slug to COMPANIES in that file)
+#   workday         → scrape-workday.mjs (add tenant/board to COMPANIES in that file)
+#   postfinance     → scrape-postfinance.mjs (add brand to BRANDS in that file)
+#   prospective     → scrape-prospective.mjs (add url to COMPANIES in that file)
+#   phenom          → scrape-phenom.mjs (add entry to COMPANIES in that file)
+#   playwright-ubs  → scrape-ubs.mjs (hardcoded, no config needed)
+
+tracked_companies:
+
+  # ── Direct API (Greenhouse) — zero config, just add the slug ─────────────
+  - name: Point72 Asset Management
+    careers_url: https://careers.point72.com/
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/point72/jobs
+
+  - name: AQR Capital Management
+    careers_url: https://www.aqr.com/About-Us/Careers
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/aqr/jobs
+
+  - name: Jane Street
+    careers_url: https://www.janestreet.com/join-jane-street/
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/janestreet/jobs
+
+  - name: Virtu Financial
+    careers_url: https://www.virtu.com/careers/
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/virtu/jobs
+
+  - name: IMC Trading
+    careers_url: https://www.imc.com/eu/careers/
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/imc/jobs
+
+  - name: Optiver
+    careers_url: https://optiver.com/working-at-optiver/career-opportunities/
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/optiver/jobs
+
+  - name: Flow Traders
+    careers_url: https://www.flowtraders.com/careers
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/flowtraders/jobs
+
+  # ── Playwright scraper ───────────────────────────────────────────────────
+  - name: UBS
+    careers_url: https://jobs.ubs.com
+    scan_method: playwright-ubs
+    notes: "Taleo ATS. Uses headless browser. Keywords configured in scrape-ubs.mjs."
+
+  # ── Umantis ATS ──────────────────────────────────────────────────────────
+  # To add a company: find their Umantis slug from their careers URL
+  # (pattern: {slug}.umantis.com/Jobs/All), add to scrape-umantis.mjs COMPANIES array.
+  - name: J. Safra Sarasin
+    careers_url: https://jsafrasarasin.umantis.com/Jobs/All
+    scan_method: umantis
+
+  - name: AXA Switzerland
+    careers_url: https://recruitingapp-2735.umantis.com/Jobs/All
+    scan_method: umantis
+
+  # ── Workday ATS ──────────────────────────────────────────────────────────
+  # To add a company: find tenant+instance from their URL ({tenant}.{instance}.myworkdayjobs.com)
+  # and the board name from the URL path. Add to scrape-workday.mjs COMPANIES array.
+  - name: Rothschild & Co
+    careers_url: https://rothschildandco.wd3.myworkdayjobs.com/Rothschildandco_Lateral
+    scan_method: workday
+
+  # ── SuccessFactors custom wrapper ────────────────────────────────────────
+  - name: PostFinance
+    careers_url: https://jobs.postfinance.ch
+    scan_method: postfinance
+
+  # ── prospective.ch ───────────────────────────────────────────────────────
+  # To add a company: find their prospective.ch URL, add to scrape-prospective.mjs COMPANIES array.
+  - name: Helvetia
+    careers_url: https://jobs.helvetia.com/ch/?lang=en&r=1
+    scan_method: prospective
+
+  - name: Generali Switzerland
+    careers_url: https://jobs.generali.ch/?lang=en
+    scan_method: prospective
+
+  # ── Phenom People ────────────────────────────────────────────────────────
+  # To add a company: find their search-results URL and SuccessFactors company code,
+  # add to scrape-phenom.mjs COMPANIES array.
+  - name: Allianz
+    careers_url: https://careers.allianz.com/ch/de/search-results?s=1
+    scan_method: phenom

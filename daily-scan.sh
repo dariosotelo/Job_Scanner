@@ -1,0 +1,35 @@
+#!/bin/bash
+# daily-scan.sh — Scan portals + UBS + notify via Telegram if new jobs found.
+
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$REPO_DIR"
+
+LOG="$REPO_DIR/data/daily-scan.log"
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Iniciando escaneo..." >> "$LOG"
+
+# 1. Zero-token API scanner (Greenhouse/Ashby/Lever companies)
+node scan.mjs >> "$LOG" 2>&1
+
+# 2. UBS Playwright scraper (Taleo — no public API)
+node scrape-ubs.mjs >> "$LOG" 2>&1
+
+# 3. Umantis scraper (J. Safra Sarasin and other Umantis companies)
+node scrape-umantis.mjs >> "$LOG" 2>&1
+
+# 4. Workday scraper (Rothschild & Co and other Workday companies)
+node scrape-workday.mjs >> "$LOG" 2>&1
+
+# 5. PostFinance / Swiss Post group scraper (SuccessFactors-based)
+node scrape-postfinance.mjs >> "$LOG" 2>&1
+
+# 6. Prospective.ch scraper (Helvetia and other Swiss companies on this platform)
+node scrape-prospective.mjs >> "$LOG" 2>&1
+
+# 7. Phenom People scraper (Allianz and other Phenom People companies)
+node scrape-phenom.mjs >> "$LOG" 2>&1
+
+# 8. Notify Telegram if anything new was found today
+node notify-telegram.mjs >> "$LOG" 2>&1
+
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Listo." >> "$LOG"

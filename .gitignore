@@ -1,0 +1,18 @@
+# Secrets — never commit
+.env
+
+# Personal config — each user maintains their own
+portals.yml
+
+# Scanner output — personal history, never commit
+data/scan-history.tsv
+data/notified-urls.txt
+data/analyzed-urls.txt
+data/daily-scan.log
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
