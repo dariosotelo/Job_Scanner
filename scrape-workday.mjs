@@ -53,6 +53,12 @@ const COMPANIES = [
     board:    'Internships',
     name:     'Julius Baer',
   },
+  {
+    tenant:   'lombardodier',
+    instance: 'wd3',
+    board:    'Lombard_Odier_Careers',
+    name:     'Lombard Odier',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];
