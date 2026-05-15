@@ -65,6 +65,20 @@ const COMPANIES = [
     board:    'lgtcpcurrentvacancies',
     name:     'LGT Capital Partners',
   },
+  {
+    tenant:   'ms',
+    instance: 'wd5',
+    board:    'External',
+    name:     'Morgan Stanley',
+    // Country IDs (stable Workday UUIDs) for UK, Germany, France — all other regions filtered client-side.
+    appliedFacets: {
+      Location_Country: [
+        '29247e57dbaf46fb855b224e03170bc7',  // United Kingdom (72 jobs)
+        'dcc5b7608d8644b3a93716604e78e995',  // Germany (8 jobs)
+        '54c5b6971ffb4bf0b116fe7651ec789a',  // France (1 job)
+      ],
+    },
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];
@@ -133,7 +147,7 @@ async function fetchAllJobs(company) {
         'Accept': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
       },
-      body: JSON.stringify({ appliedFacets: {}, limit, offset, searchText: '' }),
+      body: JSON.stringify({ appliedFacets: company.appliedFacets || {}, limit, offset, searchText: '' }),
     });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

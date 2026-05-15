@@ -1057,8 +1057,74 @@ gives both full visibility and a highlighted shortlist in the same daily message
 
 ---
 
+---
+
+### 38. Morgan Stanley added to Workday scraper — 2026-05-15
+
+**ATS discovered:** The MS careers page (`morganstanley.com/careers/career-opportunities-search`)
+embeds a custom jQuery search calling an internal servlet at
+`/web/career_services/webapp/service/careerservice/resultset.json`. The location
+metadata JSON at `/content/dam/msdotcom/appdata/filter-metadata-location.json` revealed all
+EMEA traffic routes to **Eightfold AI** (`morganstanley.eightfold.ai`) — which requires
+reCAPTCHA tokens and returns 403 to direct API calls.
+
+**Workday found via Korea link in the same metadata:**
+`ms.wd5.myworkdayjobs.com` with board `External`. No auth required — same Workday
+POST pattern as all existing companies.
+
+**Server-side location filter:** 1490 global jobs on the External board. Applied
+`Location_Country` facet with three stable Workday UUIDs to restrict to EMEA:
+- `29247e57dbaf46fb855b224e03170bc7` — United Kingdom (72 jobs)
+- `dcc5b7608d8644b3a93716604e78e995` — Germany (8 jobs)
+- `54c5b6971ffb4bf0b116fe7651ec789a` — France (1 job)
+
+Switzerland has no jobs in this Workday board as of 2026-05-15 and does not appear
+in the country facets.
+
+**Implementation:** added as a new entry in `scrape-workday.mjs` COMPANIES array with
+an optional `appliedFacets` property (one-line change to `fetchAllJobs` to pass it through).
+No new file needed.
+
+**Job URL:** `https://ms.wd5.myworkdayjobs.com/External{externalPath}`
+
+**Test result:** 81 EMEA jobs fetched, 10 relevant matches (first dry-run):
+- FID - FXEM Quant Strat | London
+- Investment Management - Broad Markets Fixed Income - Investment Grade Credit Research Analyst | London
+- Counterparty Credit Risk Associate | Frankfurt
+- Counterparty Credit Risk Manager | Frankfurt
+- Credit Risk Officer - Fixed Income Division Secured Lending | Frankfurt
+- and 5 more risk/credit roles in London and Frankfurt
+
+**COMPANIES.md:** Morgan Stanley moved from "not yet automated" to automated.
+
+---
+
+### Current scraper coverage summary (updated 2026-05-15)
+
+| Platform | Script | Companies |
+|----------|--------|-----------|
+| Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders, Man Group, Winton, Marshall Wace |
+| Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
+| Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners, **Morgan Stanley** |
+| SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
+| prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
+| Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Radancy ATS (plain HTTP) | `scrape-blackrock.mjs` | BlackRock |
+| TAL / Oleeo (plain HTTP) | `scrape-lazard.mjs` | Lazard |
+
+**Total companies with automated daily scanning: 30**
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
-- [ ] Investigate Workday board names for Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)

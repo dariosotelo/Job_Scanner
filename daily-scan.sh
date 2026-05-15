@@ -17,7 +17,7 @@ node scrape-ubs.mjs >> "$LOG" 2>&1
 # 3. Umantis scraper (J. Safra Sarasin and other Umantis companies)
 node scrape-umantis.mjs >> "$LOG" 2>&1
 
-# 4. Workday scraper (Rothschild & Co and other Workday companies)
+# 4. Workday scraper (Rothschild & Co, Morgan Stanley, and other Workday companies)
 node scrape-workday.mjs >> "$LOG" 2>&1
 
 # 5. PostFinance / Swiss Post group scraper (SuccessFactors-based)
