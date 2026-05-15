@@ -1123,8 +1123,62 @@ No new file needed.
 
 ---
 
+---
+
+### 39. Schroders scraper built (`scrape-schroders.mjs`) — 2026-05-15
+
+**ATS:** Oracle HCM Candidate Experience — same platform as JPMorgan, different instance.
+Careers at `https://ekbq.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/`.
+
+**Instance details:**
+- Oracle instance: `ekbq`, region: `em2` (compared to JPMorgan: `jpmc`, `na1`)
+- Site: `CX_2`
+- API: `GET https://ekbq.fa.em2.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions`
+
+**Implementation notes (inherits JPMorgan gotchas):**
+- Finder string must NOT be URLSearchParams-encoded — raw string append to URL only
+- `%3B` used within `facetsList` sub-value to separate items (pre-encoded `;`)
+- No location filter applied — Schroders has only 37 global jobs total, so all are fetched
+  and filtered client-side via `portals.yml`. Switzerland (Zurich, Geneva) and UK (London)
+  offices both present.
+- `PrimaryLocation` field gives a clean city string (e.g. "Zurich, Switzerland")
+
+**Job URL:** `https://ekbq.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2/job/{Id}`
+
+**Test result:** 37 jobs fetched, 0 current title matches (no intern/grad/junior roles live at time of scan).
+
+**Pipeline integration:** added as step 16 in `daily-scan.sh` (notify moved to step 17).
+**COMPANIES.md:** Schroders moved from "not yet automated" to automated.
+
+---
+
+### Current scraper coverage summary (updated 2026-05-15)
+
+| Platform | Script | Companies |
+|----------|--------|-----------|
+| Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders, Man Group, Winton, Marshall Wace |
+| Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
+| Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners, Morgan Stanley |
+| SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
+| prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
+| Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-schroders.mjs` | Schroders |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Radancy ATS (plain HTTP) | `scrape-blackrock.mjs` | BlackRock |
+| TAL / Oleeo (plain HTTP) | `scrape-lazard.mjs` | Lazard |
+
+**Total companies with automated daily scanning: 31**
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
-- [ ] Investigate Workday board names for Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)

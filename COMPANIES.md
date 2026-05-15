@@ -1,6 +1,6 @@
 # Company Coverage
 
-Last updated: 2026-05-14
+Last updated: 2026-05-15
 
 ---
 
@@ -34,7 +34,7 @@ Slugs tested during setup (2026-05-13 / 2026-05-14):
 | `twosigma` | ❌ 404 | Not on Greenhouse |
 | `deshaw` | ❌ 404 | Not on Greenhouse |
 | `millennium` | ❌ 404 | Not on Greenhouse |
-| `schroders` | ❌ 404 | Uses Workday (board name unknown) |
+| `schroders` | ❌ 404 | Uses Oracle HCM CE (not Workday) — automated via scrape-schroders.mjs |
 | `lazard` | ❌ 404 | Uses TAL / Oleeo (`lazard-careers.tal.net`), not Greenhouse |
 | `dws` | ❌ 404 | Uses Workday (board name unknown) |
 | `man-group` | ❌ 404 | Wrong slug format; actual board is `mangroup` on Greenhouse EU |
@@ -55,7 +55,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 | Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
-- Schroders, DWS, AXA, BNP Paribas, Société Générale, Deutsche Bank, Amundi
+- DWS, AXA, BNP Paribas, Société Générale, Deutsche Bank, Amundi
 
 To find the board name: visit the company's careers page, click any job, and read
 the Workday URL: `{tenant}.{instance}.myworkdayjobs.com/{board}/job/...`
@@ -173,7 +173,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | JPMorgan Chase | Zurich, London, Frankfurt | Oracle HCM CE — automated via `scrape-jpmorgan.mjs` |
 | BlackRock | Zurich, London | Radancy ATS — automated via `scrape-blackrock.mjs` |
 | Morgan Stanley | London, Frankfurt, Paris | Workday wd5 — automated via `scrape-workday.mjs` |
-| Schroders | London, Zurich | Workday — board name not yet found |
+| Schroders | London, Zurich | Oracle HCM CE — automated via `scrape-schroders.mjs` |
 | BNP Paribas | Paris, London | Workday — board name not yet found |
 | Deutsche Bank | Frankfurt, London | Workday — board name not yet found |
 | Société Générale | Paris, London | Custom ATS |
@@ -279,12 +279,12 @@ Man Group — Greenhouse API (slug: mangroup)
 BlackRock — Radancy ATS (plain HTTP, 494 global jobs, client-side location filter)
 Lazard — TAL / Oleeo board pages (plain HTTPS, lazard-careers.tal.net)
 Morgan Stanley — Workday API (wd5 instance, External board, UK+Germany+France country filter)
+Schroders — Oracle HCM CE REST API (plain HTTP, 37 global jobs, client-side filter)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Schroders — Workday, board name not found yet.
 BNP Paribas — Workday, board name not found yet.
 Deutsche Bank — Workday, board name not found yet.
 HSBC — Workday, board name not found yet.
