@@ -275,12 +275,12 @@ Zurich Insurance — plain HTTP (server-rendered HTML, careers.zurich.com)
 JPMorgan Chase — Oracle HCM CE REST API (plain HTTP, UK location filter)
 Goldman Sachs — Higher GraphQL API (plain HTTP, higher.gs.com)
 Man Group — Greenhouse API (slug: mangroup)
+BlackRock — Radancy ATS (plain HTTP, 494 global jobs, client-side location filter)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-BlackRock — Workday, board name not found yet.
 Morgan Stanley — Workday, board name not found yet.
 Schroders — Workday, board name not found yet.
 BNP Paribas — Workday, board name not found yet.
@@ -294,7 +294,6 @@ Unigestion — custom ATS, not investigated.
 Leonteq — custom ATS, not investigated.
 SIX Group — custom ATS, not investigated.
 Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
-Man Group — Greenhouse API (`mangroup`) — automated.
 Brevan Howard — ATS unknown.
 Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
 Qube Research & Technologies — ATS unknown.
