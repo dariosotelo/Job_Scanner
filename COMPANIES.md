@@ -35,7 +35,7 @@ Slugs tested during setup (2026-05-13 / 2026-05-14):
 | `deshaw` | ❌ 404 | Not on Greenhouse |
 | `millennium` | ❌ 404 | Not on Greenhouse |
 | `schroders` | ❌ 404 | Uses Workday (board name unknown) |
-| `lazard` | ❌ 404 | Not on Greenhouse |
+| `lazard` | ❌ 404 | Uses TAL / Oleeo (`lazard-careers.tal.net`), not Greenhouse |
 | `dws` | ❌ 404 | Uses Workday (board name unknown) |
 | `man-group` | ❌ 404 | Wrong slug format; actual board is `mangroup` on Greenhouse EU |
 | `brevanhoward` | ❌ 404 | Not on Greenhouse |
@@ -169,8 +169,9 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Company | Relevant offices | Why not automated |
 |---------|-----------------|-------------------|
 | Goldman Sachs | Zurich, Frankfurt, London | Higher GraphQL — automated via `scrape-goldman.mjs` |
-| JPMorgan Chase | Zurich, London, Frankfurt | Workday — board name not yet found |
-| BlackRock | Zurich, London | Workday — board name not yet found |
+| Lazard | London, Paris | TAL / Oleeo — automated via `scrape-lazard.mjs` |
+| JPMorgan Chase | Zurich, London, Frankfurt | Oracle HCM CE — automated via `scrape-jpmorgan.mjs` |
+| BlackRock | Zurich, London | Radancy ATS — automated via `scrape-blackrock.mjs` |
 | Morgan Stanley | Geneva, Zurich | Workday — board name not yet found |
 | Schroders | London, Zurich | Workday — board name not yet found |
 | BNP Paribas | Paris, London | Workday — board name not yet found |
@@ -276,6 +277,7 @@ JPMorgan Chase — Oracle HCM CE REST API (plain HTTP, UK location filter)
 Goldman Sachs — Higher GraphQL API (plain HTTP, higher.gs.com)
 Man Group — Greenhouse API (slug: mangroup)
 BlackRock — Radancy ATS (plain HTTP, 494 global jobs, client-side location filter)
+Lazard — TAL / Oleeo board pages (plain HTTPS, lazard-careers.tal.net)
 
 ### Not yet automated ❌
 

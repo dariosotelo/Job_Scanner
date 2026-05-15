@@ -50,7 +50,10 @@ node scrape-goldman.mjs >> "$LOG" 2>&1
 # 14. BlackRock scraper (Radancy ATS, plain HTTP)
 node scrape-blackrock.mjs >> "$LOG" 2>&1
 
-# 15. Notify Telegram if anything new was found today
+# 15. Lazard scraper (TAL / Oleeo board pages over plain HTTPS)
+node scrape-lazard.mjs >> "$LOG" 2>&1
+
+# 16. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

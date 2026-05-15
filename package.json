@@ -1,7 +1,7 @@
 {
   "name": "job-scanner",
   "version": "1.0.0",
-  "description": "Automated daily job scanner with Telegram notifications. Covers Greenhouse, Workday, Umantis, Taleo (UBS), SuccessFactors, prospective.ch, and Phenom People portals.",
+  "description": "Automated daily job scanner with Telegram notifications. Covers Greenhouse, Workday, Umantis, Taleo (UBS), SuccessFactors, prospective.ch, Phenom People, Higher GraphQL, Radancy, and TAL/Oleeo portals.",
   "type": "module",
   "scripts": {
     "scan": "node scan.mjs",
@@ -12,6 +12,8 @@
     "scan:prospective": "node scrape-prospective.mjs",
     "scan:phenom": "node scrape-phenom.mjs",
     "scan:goldman": "node scrape-goldman.mjs",
+    "scan:blackrock": "node scrape-blackrock.mjs",
+    "scan:lazard": "node scrape-lazard.mjs",
     "notify": "node notify-telegram.mjs",
     "daily": "bash daily-scan.sh",
     "jobs": "node jobs.mjs",
