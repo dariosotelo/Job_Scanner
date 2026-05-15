@@ -44,7 +44,10 @@ node scrape-zurich.mjs >> "$LOG" 2>&1
 # 12. JPMorgan Chase scraper (Oracle HCM Candidate Experience REST API)
 node scrape-jpmorgan.mjs >> "$LOG" 2>&1
 
-# 13. Notify Telegram if anything new was found today
+# 13. Goldman Sachs scraper (Higher public GraphQL endpoint)
+node scrape-goldman.mjs >> "$LOG" 2>&1
+
+# 14. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

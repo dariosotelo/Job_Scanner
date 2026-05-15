@@ -37,7 +37,7 @@ Slugs tested during setup (2026-05-13 / 2026-05-14):
 | `schroders` | ❌ 404 | Uses Workday (board name unknown) |
 | `lazard` | ❌ 404 | Not on Greenhouse |
 | `dws` | ❌ 404 | Uses Workday (board name unknown) |
-| `man-group` | ❌ 404 | Not on Greenhouse |
+| `man-group` | ❌ 404 | Wrong slug format; actual board is `mangroup` on Greenhouse EU |
 | `brevanhoward` | ❌ 404 | Not on Greenhouse |
 | `candriam` | ❌ 404 | Not on Greenhouse |
 | `lyxor` | ❌ 404 | Not on Greenhouse |
@@ -168,7 +168,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 ### Global banks (European offices)
 | Company | Relevant offices | Why not automated |
 |---------|-----------------|-------------------|
-| Goldman Sachs | Zurich, Frankfurt, London | Workday — board name not yet found |
+| Goldman Sachs | Zurich, Frankfurt, London | Higher GraphQL — automated via `scrape-goldman.mjs` |
 | JPMorgan Chase | Zurich, London, Frankfurt | Workday — board name not yet found |
 | BlackRock | Zurich, London | Workday — board name not yet found |
 | Morgan Stanley | Geneva, Zurich | Workday — board name not yet found |
@@ -182,7 +182,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 ### Quant & systematic funds
 | Company | HQ | Why not automated |
 |---------|----|-------------------|
-| Man Group | London / Zurich | Not on Greenhouse; ATS unknown |
+| Man Group | London / Zurich | Greenhouse EU board (`mangroup`) — automated |
 | Brevan Howard | Geneva | Not on Greenhouse; ATS unknown |
 | Squarepoint Capital | Geneva | Not on Greenhouse; ATS unknown |
 | Qube Research & Technologies | London / Paris | Not on Greenhouse; ATS unknown |
@@ -273,12 +273,13 @@ LGT Private Bank — plain HTTP (CoreMedia CMS fragment endpoint)
 Swiss Re — Playwright (intercepts internal JSON API at swissre.com/bin/swissre/search)
 Zurich Insurance — plain HTTP (server-rendered HTML, careers.zurich.com)
 JPMorgan Chase — Oracle HCM CE REST API (plain HTTP, UK location filter)
+Goldman Sachs — Higher GraphQL API (plain HTTP, higher.gs.com)
+Man Group — Greenhouse API (slug: mangroup)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Goldman Sachs — Workday, board name not found yet.
 BlackRock — Workday, board name not found yet.
 Morgan Stanley — Workday, board name not found yet.
 Schroders — Workday, board name not found yet.
@@ -293,7 +294,7 @@ Unigestion — custom ATS, not investigated.
 Leonteq — custom ATS, not investigated.
 SIX Group — custom ATS, not investigated.
 Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
-Man Group — ATS unknown.
+Man Group — Greenhouse API (`mangroup`) — automated.
 Brevan Howard — ATS unknown.
 Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
 Qube Research & Technologies — ATS unknown.

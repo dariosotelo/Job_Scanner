@@ -11,6 +11,7 @@
     "scan:postfinance": "node scrape-postfinance.mjs",
     "scan:prospective": "node scrape-prospective.mjs",
     "scan:phenom": "node scrape-phenom.mjs",
+    "scan:goldman": "node scrape-goldman.mjs",
     "notify": "node notify-telegram.mjs",
     "daily": "bash daily-scan.sh",
     "jobs": "node jobs.mjs",

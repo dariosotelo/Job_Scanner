@@ -138,6 +138,11 @@ tracked_companies:
     scan_method: greenhouse-api
     api: https://boards-api.greenhouse.io/v1/boards/marshallwace/jobs
 
+  - name: Man Group
+    careers_url: https://www.man.com/careers
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/mangroup/jobs
+
   # ── Playwright scraper ───────────────────────────────────────────────────
   - name: UBS
     careers_url: https://jobs.ubs.com
@@ -161,6 +166,9 @@ tracked_companies:
   - name: Rothschild & Co
     careers_url: https://rothschildandco.wd3.myworkdayjobs.com/Rothschildandco_Lateral
     scan_method: workday
+  - name: Goldman Sachs
+    careers_url: https://higher.gs.com/results
+    scan_method: goldman
 
   # ── SuccessFactors custom wrapper ────────────────────────────────────────
   - name: PostFinance

@@ -702,8 +702,10 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 | Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
 | Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
 | Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Greenhouse API | `scan.mjs` | Man Group (slug: mangroup) |
 
-**Total companies with automated daily scanning: 25**
+**Total companies with automated daily scanning: 27**
 
 ---
 
@@ -918,8 +920,36 @@ in JPMorgan's CE portal as of 2026-05-15 and does not appear in the location fac
 
 ---
 
+### 35. Goldman Sachs + Man Group added — merged from adam/setup branch — 2026-05-15
+
+Contributor (Adam) added two companies via a separate branch. Merged into main after
+conflict resolution and dry-run verification.
+
+**Goldman Sachs (`scrape-goldman.mjs`):**
+- ATS: "Higher" — Goldman's proprietary careers platform at `higher.gs.com`
+- Public GraphQL API at `https://api-higher.gs.com/gateway/api/v1/graphql`
+- Query: `roleSearch` with `experiences: ['EARLY_CAREER', 'PROFESSIONAL']`
+- Returns `roleId`, `jobTitle`, `locations`, `status`, `externalSource.sourceId`
+- Job URL: `https://higher.gs.com/roles/{sourceId}`
+- 1473 global jobs; 14 relevant matches on first dry-run (London)
+- Added as step 13 in `daily-scan.sh`
+
+**Man Group:**
+- Greenhouse API, slug: `mangroup` (not `man-group` which returns 404)
+- 56 jobs — includes Pfaffikon, Switzerland office
+- Added to `portals.example.yml` and `scan.mjs` via Greenhouse API
+
+**Merge conflict resolution:**
+- `daily-scan.sh`: Adam inserted Goldman as step 11; main had Zurich (11) and JPMorgan (12).
+  Resolved by placing Goldman as step 13, notify as step 14.
+- `COMPANIES.md`: Adam's branch still had Winton/Marshall Wace/JPMorgan in the
+  not-yet-automated list (already removed on main). Resolved by keeping main's state
+  (those entries removed) and dropping Goldman from not-yet-automated entirely.
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
-- [ ] Investigate Workday board names for Goldman Sachs, BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
