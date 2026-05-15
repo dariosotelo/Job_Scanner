@@ -1,6 +1,6 @@
 # Company Coverage
 
-Last updated: 2026-05-14
+Last updated: 2026-05-15
 
 ---
 
@@ -35,7 +35,7 @@ Slugs tested during setup (2026-05-13 / 2026-05-14):
 | `deshaw` | ❌ 404 | Not on Greenhouse |
 | `millennium` | ❌ 404 | Not on Greenhouse |
 | `schroders` | ❌ 404 | Uses Workday (board name unknown) |
-| `lazard` | ❌ 404 | Not on Greenhouse |
+| `lazard` | ? 404 | Uses TAL / Oleeo (`lazard-careers.tal.net`), not Greenhouse |
 | `dws` | ❌ 404 | Uses Workday (board name unknown) |
 | `man-group` | ❌ 404 | Wrong slug format; actual board is `mangroup` on Greenhouse EU |
 | `brevanhoward` | ❌ 404 | Not on Greenhouse |
@@ -169,6 +169,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Company | Relevant offices | Why not automated |
 |---------|-----------------|-------------------|
 | Goldman Sachs | Zurich, Frankfurt, London | Higher GraphQL — automated via `scrape-goldman.mjs` |
+| Lazard | London, Paris, New York | TAL / Oleeo ? automated via `scrape-lazard.mjs` |
 | JPMorgan Chase | Zurich, London, Frankfurt | Workday — board name not yet found |
 | BlackRock | Zurich, London | Workday — board name not yet found |
 | Morgan Stanley | Geneva, Zurich | Workday — board name not yet found |
@@ -275,6 +276,7 @@ Zurich Insurance — plain HTTP (server-rendered HTML, careers.zurich.com)
 JPMorgan Chase — Oracle HCM CE REST API (plain HTTP, UK location filter)
 Goldman Sachs — Higher GraphQL API (plain HTTP, higher.gs.com)
 Man Group — Greenhouse API (slug: mangroup)
+Lazard ? TAL / Oleeo board pages (plain HTTPS, lazard-careers.tal.net)
 
 ### Not yet automated ❌
 
@@ -294,7 +296,6 @@ Unigestion — custom ATS, not investigated.
 Leonteq — custom ATS, not investigated.
 SIX Group — custom ATS, not investigated.
 Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
-Man Group — Greenhouse API (`mangroup`) — automated.
 Brevan Howard — ATS unknown.
 Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
 Qube Research & Technologies — ATS unknown.

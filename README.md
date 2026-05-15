@@ -2,7 +2,7 @@
 
 Automated daily job scanner for finance roles. Hits company career portals directly — no scraping aggregators, no duplicates, Telegram notification when something new appears.
 
-Covers 8 ATS platforms out of the box:
+Covers 9 ATS platforms out of the box:
 
 | Platform | Companies (examples) |
 |----------|---------------------|
@@ -14,6 +14,7 @@ Covers 8 ATS platforms out of the box:
 | prospective.ch | Helvetia, Generali Switzerland |
 | Phenom People | Allianz |
 | Higher GraphQL | Goldman Sachs |
+| TAL / Oleeo | Lazard |
 
 ---
 
@@ -61,6 +62,7 @@ bash daily-scan.sh             # full pipeline
 node scan.mjs --dry-run
 node scrape-ubs.mjs --dry-run
 node scrape-goldman.mjs --dry-run
+node scrape-lazard.mjs --dry-run
 ```
 
 ### 5. Schedule daily runs
@@ -167,6 +169,10 @@ Find their search-results URL and SuccessFactors company code, add to `scrape-ph
 ### Higher GraphQL
 Some sites expose a public role-search API behind their careers frontend.
 Goldman Sachs is the reference implementation in `scrape-goldman.mjs`.
+
+### TAL / Oleeo
+Some employers use TAL/Oleeo job boards with server-rendered listing and detail pages.
+Lazard is the reference implementation in `scrape-lazard.mjs`.
 
 ---
 

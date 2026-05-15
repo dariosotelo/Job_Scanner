@@ -169,6 +169,9 @@ tracked_companies:
   - name: Goldman Sachs
     careers_url: https://higher.gs.com/results
     scan_method: goldman
+  - name: Lazard
+    careers_url: https://www.lazard.com/careers/jobs/
+    scan_method: lazard
 
   # ── SuccessFactors custom wrapper ────────────────────────────────────────
   - name: PostFinance

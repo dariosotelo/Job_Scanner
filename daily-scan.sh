@@ -47,7 +47,10 @@ node scrape-jpmorgan.mjs >> "$LOG" 2>&1
 # 13. Goldman Sachs scraper (Higher public GraphQL endpoint)
 node scrape-goldman.mjs >> "$LOG" 2>&1
 
-# 14. Notify Telegram if anything new was found today
+# 14. Lazard scraper (TAL / Oleeo board pages over plain HTTPS)
+node scrape-lazard.mjs >> "$LOG" 2>&1
+
+# 15. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
