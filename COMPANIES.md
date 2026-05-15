@@ -272,13 +272,13 @@ Pictet — SuccessFactors Playwright scraper (career012)
 LGT Private Bank — plain HTTP (CoreMedia CMS fragment endpoint)
 Swiss Re — Playwright (intercepts internal JSON API at swissre.com/bin/swissre/search)
 Zurich Insurance — plain HTTP (server-rendered HTML, careers.zurich.com)
+JPMorgan Chase — Oracle HCM CE REST API (plain HTTP, UK location filter)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
 Goldman Sachs — Workday, board name not found yet.
-JPMorgan Chase — Workday, board name not found yet.
 BlackRock — Workday, board name not found yet.
 Morgan Stanley — Workday, board name not found yet.
 Schroders — Workday, board name not found yet.

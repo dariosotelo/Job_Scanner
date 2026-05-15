@@ -701,8 +701,9 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 | CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
 | Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
 | Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
 
-**Total companies with automated daily scanning: 24**
+**Total companies with automated daily scanning: 25**
 
 ---
 
@@ -885,8 +886,40 @@ is fully server-side rendered HTML — no Playwright needed.
 
 ---
 
+### 34. JPMorgan Chase scraper built (`scrape-jpmorgan.mjs`) — 2026-05-15
+
+**ATS:** Oracle HCM Candidate Experience (Oracle Fusion). Not Workday as initially assumed.
+Careers at `jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/`.
+
+**API discovered** via Playwright network interception on the CE page:
+`GET https://jpmc.fa.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions`
+
+**Critical implementation notes (hard-won):**
+- The `finder` query parameter MUST be appended to the URL as a raw string — using
+  `URLSearchParams` URL-encodes the `;` and `,` separators inside the finder, which breaks
+  the Oracle parser (400 Bad Request or 0 jobs returned).
+- Within the `facetsList` sub-value, the list items are separated by `%3B` (pre-encoded `;`),
+  because `;` is also the finder attribute separator and must be distinguished.
+- Location filtering requires BOTH `lastSelectedFacet=LOCATIONS` AND
+  `selectedLocationsFacet={id}` in the finder. Omitting `lastSelectedFacet` makes the server
+  apply the location filter to facet counts only — it returns the correct total but
+  `requisitionList` is empty.
+- Pagination uses `offset=N` as an attribute inside the finder string (not a top-level param).
+- No authentication required — plain `fetch()` with `Accept: application/json` works.
+
+**Location IDs used:** `300000000289276` (United Kingdom). Switzerland has 0 active jobs
+in JPMorgan's CE portal as of 2026-05-15 and does not appear in the location facets.
+
+**Job URL:** `https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/{Id}`
+
+**Test result:** 644 UK jobs fetched, 22 relevant matches on first dry-run.
+
+**Pipeline integration:** added as step 12 in `daily-scan.sh`.
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
-- [ ] Investigate Workday board names for Goldman Sachs, JPMorgan, BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for Goldman Sachs, BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
