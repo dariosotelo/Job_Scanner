@@ -254,6 +254,8 @@ Virtu Financial — Greenhouse API
 IMC Trading — Greenhouse API
 Optiver — Greenhouse API
 Flow Traders — Greenhouse API
+Winton Group — Greenhouse API
+Marshall Wace — Greenhouse API
 UBS — Playwright (intercepts Taleo internal API)
 J. Safra Sarasin — Umantis API
 AXA Switzerland — Umantis API
@@ -275,8 +277,6 @@ Swiss Re — Playwright (intercepts internal JSON API at swissre.com/bin/swissre
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 Zurich Insurance — careers.zurich.com, ATS not investigated yet.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Winton Group — likely Greenhouse but slug not confirmed.
-Marshall Wace — likely Greenhouse but slug not confirmed.
 Goldman Sachs — Workday, board name not found yet.
 JPMorgan Chase — Workday, board name not found yet.
 BlackRock — Workday, board name not found yet.
