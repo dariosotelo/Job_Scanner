@@ -138,6 +138,11 @@ tracked_companies:
     scan_method: greenhouse-api
     api: https://boards-api.greenhouse.io/v1/boards/marshallwace/jobs
 
+  - name: Man Group
+    careers_url: https://www.man.com/careers
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/mangroup/jobs
+
   # ── Playwright scraper ───────────────────────────────────────────────────
   - name: UBS
     careers_url: https://jobs.ubs.com
