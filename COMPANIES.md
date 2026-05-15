@@ -271,11 +271,11 @@ Allianz — Phenom People scraper (~200 pages, runs slowly)
 Pictet — SuccessFactors Playwright scraper (career012)
 LGT Private Bank — plain HTTP (CoreMedia CMS fragment endpoint)
 Swiss Re — Playwright (intercepts internal JSON API at swissre.com/bin/swissre/search)
+Zurich Insurance — plain HTTP (server-rendered HTML, careers.zurich.com)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
-Zurich Insurance — careers.zurich.com, ATS not investigated yet.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
 Goldman Sachs — Workday, board name not found yet.
 JPMorgan Chase — Workday, board name not found yet.

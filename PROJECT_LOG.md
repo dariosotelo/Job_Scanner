@@ -700,8 +700,9 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 | Phenom People | `scrape-phenom.mjs` | Allianz |
 | CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
 | Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
 
-**Total companies with automated daily scanning: 23**
+**Total companies with automated daily scanning: 24**
 
 ---
 
@@ -863,8 +864,29 @@ Location filtering is left to `portals.yml` (same as all other scrapers).
 
 ---
 
+### 33. Zurich Insurance scraper built (`scrape-zurich.mjs`) — 2026-05-15
+
+**ATS:** SAP SuccessFactors under the hood, but the careers page (`careers.zurich.com/search/`)
+is fully server-side rendered HTML — no Playwright needed.
+
+**URL pattern:** `GET https://www.careers.zurich.com/search/?q=&locationsearch=Switzerland%2C+London&startrow=N`
+- 25 jobs per page, paginated via `startrow` (0, 25, 50, …)
+- Total count parsed from "Results X to Y of Z" header on page 1
+- Location filter in the URL restricts to Switzerland and London server-side
+
+**HTML structure:**
+- Each job: `<tr class="data-row">`
+- Title + URL: `<a class="jobTitle-link" href="/job/...">` inside `<span class="jobTitle hidden-phone">` (hidden-phone avoids duplicate links from the mobile layout)
+- Location: `<span class="jobLocation">` inside `<td class="colLocation hidden-phone">`
+
+**Test result:** 54 total jobs, 2 relevant matches (SME Segmentation Actuarial Analyst, Group Risk Proposition Consultant).
+
+**Pipeline integration:** added as step 11 in `daily-scan.sh`.
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active, Zurich Insurance)
+- [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
 - [ ] Investigate Workday board names for Goldman Sachs, JPMorgan, BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
