@@ -1177,8 +1177,62 @@ Careers at `https://ekbq.fa.em2.oraclecloud.com/hcmUI/CandidateExperience/en/sit
 
 ---
 
+---
+
+### 40. BNP Paribas scraper built (`scrape-bnpparibas.mjs`) — 2026-05-15
+
+**Investigation path:**
+- User URL (`group.bnpparibas/en/careers/all-job-offers`) blocked by Akamai (403 to all direct requests).
+- `bnpparibas.tal.net` found (TAL/Oleeo) but the board pages were empty — no active job listings on that board.
+- `careers.bnpparibas.co.uk` — separate UK early-career WordPress site; exposes a public REST API.
+
+**API endpoint:**
+`GET https://careers.bnpparibas.co.uk/wp-json/wp/v2/gbjf_job_post?per_page=100`
+
+Custom WordPress post type (`gbjf_job_post`) registered by their theme plugin. No auth required.
+Returns job objects with `title.rendered` (HTML-encoded), `city`, and `link` (canonical URL).
+Total count available via `X-WP-Total` response header.
+
+**Coverage note:** This board only covers the UK early-career portal (internships, graduate programmes in London). The main group.bnpparibas portal (global corporate roles) is Akamai-blocked and not accessible without a browser. That portal uses numeric IDs in its filter params and likely has a server-side API, but it is not discoverable without DevTools interception.
+
+**Implementation:** Plain `fetch()` — no HTML parsing, no pagination (11 total jobs). HTML entity decoding handles `&#8211;` (en-dash) in job titles.
+
+**Test result:** 11 jobs fetched, 2 relevant matches:
+- London – Long Term Internship 2026 – Market Risk (×2 separate postings)
+
+**Pipeline integration:** added as step 17 in `daily-scan.sh` (notify moved to step 18).
+**COMPANIES.md:** BNP Paribas moved from "not yet automated" to automated.
+
+---
+
+### Current scraper coverage summary (updated 2026-05-15)
+
+| Platform | Script | Companies |
+|----------|--------|-----------|
+| Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders, Man Group, Winton, Marshall Wace |
+| Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
+| Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners, Morgan Stanley |
+| SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
+| prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
+| Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-schroders.mjs` | Schroders |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Radancy ATS (plain HTTP) | `scrape-blackrock.mjs` | BlackRock |
+| TAL / Oleeo (plain HTTP) | `scrape-lazard.mjs` | Lazard |
+| WordPress REST API (plain HTTP) | `scrape-bnpparibas.mjs` | BNP Paribas |
+
+**Total companies with automated daily scanning: 32**
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
-- [ ] Investigate Workday board names for BNP Paribas, Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)

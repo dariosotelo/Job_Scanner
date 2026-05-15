@@ -55,7 +55,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 | Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
-- DWS, AXA, BNP Paribas, Société Générale, Deutsche Bank, Amundi
+- DWS, AXA, Société Générale, Deutsche Bank, Amundi
 
 To find the board name: visit the company's careers page, click any job, and read
 the Workday URL: `{tenant}.{instance}.myworkdayjobs.com/{board}/job/...`
@@ -174,7 +174,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | BlackRock | Zurich, London | Radancy ATS — automated via `scrape-blackrock.mjs` |
 | Morgan Stanley | London, Frankfurt, Paris | Workday wd5 — automated via `scrape-workday.mjs` |
 | Schroders | London, Zurich | Oracle HCM CE — automated via `scrape-schroders.mjs` |
-| BNP Paribas | Paris, London | Workday — board name not yet found |
+| BNP Paribas | Paris, London | WordPress REST API (UK early-career) — automated via `scrape-bnpparibas.mjs` |
 | Deutsche Bank | Frankfurt, London | Workday — board name not yet found |
 | Société Générale | Paris, London | Custom ATS |
 | HSBC | Geneva, Zurich | Workday — board name not yet found |
@@ -280,12 +280,12 @@ BlackRock — Radancy ATS (plain HTTP, 494 global jobs, client-side location fil
 Lazard — TAL / Oleeo board pages (plain HTTPS, lazard-careers.tal.net)
 Morgan Stanley — Workday API (wd5 instance, External board, UK+Germany+France country filter)
 Schroders — Oracle HCM CE REST API (plain HTTP, 37 global jobs, client-side filter)
+BNP Paribas — WordPress REST API (careers.bnpparibas.co.uk UK early-career portal, ~11 jobs)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-BNP Paribas — Workday, board name not found yet.
 Deutsche Bank — Workday, board name not found yet.
 HSBC — Workday, board name not found yet.
 Société Générale — custom ATS, not investigated.

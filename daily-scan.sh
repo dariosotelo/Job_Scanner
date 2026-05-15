@@ -56,7 +56,10 @@ node scrape-lazard.mjs >> "$LOG" 2>&1
 # 16. Schroders scraper (Oracle HCM Candidate Experience REST API)
 node scrape-schroders.mjs >> "$LOG" 2>&1
 
-# 17. Notify Telegram if anything new was found today
+# 17. BNP Paribas scraper (WordPress REST API — UK early-career portal)
+node scrape-bnpparibas.mjs >> "$LOG" 2>&1
+
+# 18. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
