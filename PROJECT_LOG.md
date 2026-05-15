@@ -1231,8 +1231,58 @@ Total count available via `X-WP-Total` response header.
 
 ---
 
+---
+
+### 41. Dimensional Fund Advisors + Squarepoint Capital added — 2026-05-15
+
+Contributor (Adam) added two companies via `adam/setup` branch. Merged selectively —
+only the new company data was taken; all reversions of existing scrapers were discarded.
+
+**Dimensional Fund Advisors (`scrape-workday.mjs`):**
+- Workday `dimensional.wd5.myworkdayjobs.com/DFA_Careers`
+- 52 global jobs; no location facet needed — client-side filter
+- Added to COMPANIES array in `scrape-workday.mjs` alongside Morgan Stanley
+
+**Squarepoint Capital (`portals.example.yml` / `scan.mjs`):**
+- Greenhouse slug: `squarepointcapital`
+- 82 global jobs; London and Zug offices present
+- Added to `portals.example.yml` under Greenhouse companies
+
+**Merge notes:**
+Adam's branch was based on an older version of `main` and inadvertently reversed several
+additions (deleted scrape-blackrock, scrape-schroders, scrape-bnpparibas; removed Morgan
+Stanley from Workday; reverted notify-telegram two-section format; re-introduced encoding
+bug in scrape-lazard). Only the two new company additions were cherry-picked.
+
+---
+
+### Current scraper coverage summary (updated 2026-05-15)
+
+| Platform | Script | Companies |
+|----------|--------|-----------|
+| Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders, Man Group, Winton, Marshall Wace, **Squarepoint Capital** |
+| Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
+| Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners, Morgan Stanley, **Dimensional Fund Advisors** |
+| SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
+| prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
+| Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-schroders.mjs` | Schroders |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Radancy ATS (plain HTTP) | `scrape-blackrock.mjs` | BlackRock |
+| TAL / Oleeo (plain HTTP) | `scrape-lazard.mjs` | Lazard |
+| WordPress REST API (plain HTTP) | `scrape-bnpparibas.mjs` | BNP Paribas (UK + Switzerland) |
+
+**Total companies with automated daily scanning: 34**
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
 - [ ] Investigate Workday board names for Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)

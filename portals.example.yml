@@ -143,6 +143,11 @@ tracked_companies:
     scan_method: greenhouse-api
     api: https://boards-api.greenhouse.io/v1/boards/mangroup/jobs
 
+  - name: Squarepoint Capital
+    careers_url: https://www.squarepoint-capital.com/open-opportunities
+    scan_method: greenhouse-api
+    api: https://boards-api.greenhouse.io/v1/boards/squarepointcapital/jobs
+
   # ── Playwright scraper ───────────────────────────────────────────────────
   - name: UBS
     careers_url: https://jobs.ubs.com

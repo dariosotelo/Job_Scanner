@@ -53,6 +53,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 |---------|--------|----------|-------|-----------|
 | Rothschild & Co | `rothschildandco` | `wd3` | `Rothschildandco_Lateral` | Web search for their Workday URL |
 | Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
+| Dimensional Fund Advisors | `dimensional` | `wd5` | `DFA_Careers` | careers.dimensional.com links to `dimensional.wd5.myworkdayjobs.com/DFA_Careers` |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
 - DWS, AXA, Société Générale, Deutsche Bank, Amundi
@@ -185,7 +186,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 |---------|----|-------------------|
 | Man Group | London / Zurich | Greenhouse EU board (`mangroup`) — automated |
 | Brevan Howard | Geneva | Not on Greenhouse; ATS unknown |
-| Squarepoint Capital | Geneva | Not on Greenhouse; ATS unknown |
+| Squarepoint Capital | Geneva | Greenhouse (`squarepointcapital`) — automated |
 | Qube Research & Technologies | London / Paris | Not on Greenhouse; ATS unknown |
 
 ### Paris asset managers
@@ -217,7 +218,7 @@ Workday/Greenhouse/Umantis patterns to determine if automation is possible.
 | ZKB | refline.ch (custom ATS, needs scraper) | `apply.refline.ch/792841/search.html` |
 | Citi Zurich | Taleo | `jobs.citi.com/search-jobs/Zurich` |
 | LGT Capital Partners | Custom | `lgtcp.com/en/careers/current-vacancies/` |
-| Squarepoint Capital | Custom | `squarepoint-capital.com/open-opportunities` (Zug) |
+| Squarepoint Capital | Greenhouse (`squarepointcapital`) | `squarepoint-capital.com/open-opportunities` (Zug/London) |
 | Worldquant | Custom | `worldquant.com/career-listing/?location=zug-switzerland` |
 | RAM Active Investments | Custom | `ram-ai.com/de/careers/` |
 | Swiss Re | Custom | `careers.swissre.com` |
@@ -276,11 +277,15 @@ Zurich Insurance — plain HTTP (server-rendered HTML, careers.zurich.com)
 JPMorgan Chase — Oracle HCM CE REST API (plain HTTP, UK location filter)
 Goldman Sachs — Higher GraphQL API (plain HTTP, higher.gs.com)
 Man Group — Greenhouse API (slug: mangroup)
+Squarepoint Capital — Greenhouse API (slug: squarepointcapital)
 BlackRock — Radancy ATS (plain HTTP, 494 global jobs, client-side location filter)
 Lazard — TAL / Oleeo board pages (plain HTTPS, lazard-careers.tal.net)
 Morgan Stanley — Workday API (wd5 instance, External board, UK+Germany+France country filter)
+Dimensional Fund Advisors — Workday API (wd5 instance, DFA_Careers board)
 Schroders — Oracle HCM CE REST API (plain HTTP, 37 global jobs, client-side filter)
 BNP Paribas — WordPress REST API (careers.bnpparibas.co.uk UK early-career portal, ~11 jobs)
+Dimensional Fund Advisors — Workday API (wd5 instance, DFA_Careers board, 52 global jobs)
+Squarepoint Capital — Greenhouse API (slug: squarepointcapital, 82 global jobs)
 
 ### Not yet automated ❌
 

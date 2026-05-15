@@ -66,6 +66,12 @@ const COMPANIES = [
     name:     'LGT Capital Partners',
   },
   {
+    tenant:   'dimensional',
+    instance: 'wd5',
+    board:    'DFA_Careers',
+    name:     'Dimensional Fund Advisors',
+  },
+  {
     tenant:   'ms',
     instance: 'wd5',
     board:    'External',
