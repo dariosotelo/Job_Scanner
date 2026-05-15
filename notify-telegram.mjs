@@ -25,6 +25,31 @@ const NOTIFIED_PATH     = 'data/notified-urls.txt';
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID   = process.env.TELEGRAM_CHAT_ID;
 
+// ── Entry-level detection ─────────────────────────────────────────
+
+const ENTRY_LEVEL_KEYWORDS = [
+  'internship', 'intern,', ' intern ', 'intern$',
+  'summer analyst', 'winter analyst', 'spring analyst',
+  'off-cycle', 'off cycle',
+  'graduate programme', 'graduate program',
+  'graduate analyst', 'graduate associate', 'graduate trainee',
+  'graduate talent', 'graduate rotational', 'new graduate',
+  'analyst programme', 'analyst program', 'analyst trainee',
+  'junior analyst', 'junior quant', 'junior researcher', 'junior associate',
+  'entry level', 'entry-level',
+  'new grad',
+  'trainee', 'traineeship',
+  'apprentice', 'apprenticeship',
+  'working student', 'werkstudent',
+  'campus hire', 'campus recruit',
+  'rotational programme', 'rotational program',
+];
+
+function isEntryLevel(title) {
+  const t = title.toLowerCase();
+  return ENTRY_LEVEL_KEYWORDS.some(kw => t.includes(kw.replace('$', '')));
+}
+
 // ── Helpers ──────────────────────────────────────────────────────
 
 function today() {
@@ -69,7 +94,7 @@ async function sendTelegramMessage(text) {
       chat_id: CHAT_ID,
       text,
       parse_mode: 'HTML',
-      disable_web_page_preview: false,
+      disable_web_page_preview: true,
     }),
   });
 
@@ -81,21 +106,78 @@ async function sendTelegramMessage(text) {
   return res.json();
 }
 
-function formatMessage(jobs) {
-  const date = today();
-  const count = jobs.length;
-  const header = count === 1
+// ── Formatting ────────────────────────────────────────────────────
+
+function groupByCompany(jobs) {
+  const map = new Map();
+  for (const j of jobs) {
+    if (!map.has(j.company)) map.set(j.company, []);
+    map.get(j.company).push(j);
+  }
+  return map;
+}
+
+function renderJobLine(j) {
+  const loc = j.location ? ` · ${j.location}` : '';
+  return `  • <a href="${j.url}">${j.title}</a>${loc}`;
+}
+
+function renderCompanyBlock(company, jobs) {
+  return `<b>${company}</b>\n${jobs.map(renderJobLine).join('\n')}`;
+}
+
+function buildMessages(allJobs, date) {
+  const entryJobs = allJobs.filter(j => isEntryLevel(j.title));
+
+  // Section 1 header
+  const sec1Header = allJobs.length === 1
     ? `🔔 <b>New job posting — ${date}</b>`
-    : `🔔 <b>${count} new job postings — ${date}</b>`;
+    : `🔔 <b>${allJobs.length} new job postings — ${date}</b>`;
 
-  const body = jobs.map(j => {
-    const loc = j.location ? ` · ${j.location}` : '';
-    return `• <a href="${j.url}">${j.title}</a>\n  <i>${j.company}${loc}</i>`;
-  }).join('\n\n');
+  // Section 2 header (only if there are entry-level matches)
+  const sec2Header = entryJobs.length > 0
+    ? `🎓 <b>Graduate &amp; internship positions (${entryJobs.length})</b>`
+    : null;
 
-  const footer = `\n\nRun <code>/career-ops pipeline</code> to evaluate.`;
+  // Build company blocks for each section
+  const byCompany1 = groupByCompany(allJobs);
+  const blocks1 = [...byCompany1.entries()].map(([c, js]) => renderCompanyBlock(c, js));
 
-  return `${header}\n\n${body}${footer}`;
+  const byCompany2 = groupByCompany(entryJobs);
+  const blocks2 = sec2Header
+    ? [...byCompany2.entries()].map(([c, js]) => renderCompanyBlock(c, js))
+    : [];
+
+  // Chunk everything so no single message exceeds ~3800 chars (buffer for headers)
+  const MAX = 3800;
+  const messages = [];
+
+  function flush(headerLine, bodyBlocks, isFirstChunk) {
+    let current = isFirstChunk ? `${headerLine}\n\n` : `${headerLine} (continued)\n\n`;
+    let first = true;
+    for (const block of bodyBlocks) {
+      const sep = first ? '' : '\n\n';
+      if (!first && current.length + sep.length + block.length > MAX) {
+        messages.push(current.trimEnd());
+        current = `${headerLine} (continued)\n\n${block}`;
+        first = false;
+        continue;
+      }
+      current += sep + block;
+      first = false;
+    }
+    if (current.trim().length > headerLine.length + 15) {
+      messages.push(current.trimEnd());
+    }
+  }
+
+  flush(sec1Header, blocks1, true);
+
+  if (sec2Header && blocks2.length > 0) {
+    flush(sec2Header, blocks2, true);
+  }
+
+  return messages;
 }
 
 // ── Main ─────────────────────────────────────────────────────────
@@ -117,18 +199,18 @@ async function main() {
     return;
   }
 
-  console.log(`${jobs.length} new job(s) found — sending Telegram message...`);
+  const entryCount = jobs.filter(j => isEntryLevel(j.title)).length;
+  console.log(`${jobs.length} new job(s) found (${entryCount} entry-level) — building messages...`);
 
-  const CHUNK_SIZE = 10;
-  const allUrls = jobs.map(j => j.url);
+  const messages = buildMessages(jobs, today());
 
-  for (let i = 0; i < jobs.length; i += CHUNK_SIZE) {
-    const chunk = jobs.slice(i, i + CHUNK_SIZE);
-    await sendTelegramMessage(formatMessage(chunk));
-    console.log(`  Sent batch ${Math.floor(i / CHUNK_SIZE) + 1} (${chunk.length} job(s))`);
+  for (let i = 0; i < messages.length; i++) {
+    await sendTelegramMessage(messages[i]);
+    console.log(`  Sent message ${i + 1}/${messages.length}`);
+    if (i < messages.length - 1) await new Promise(r => setTimeout(r, 1000));
   }
 
-  saveNotifiedUrls(allUrls);
+  saveNotifiedUrls(jobs.map(j => j.url));
   console.log('Done.');
 }
 

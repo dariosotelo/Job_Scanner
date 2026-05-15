@@ -948,8 +948,117 @@ conflict resolution and dry-run verification.
 
 ---
 
+---
+
+### 36. BlackRock scraper built (`scrape-blackrock.mjs`) — 2026-05-15
+
+**ATS:** Radancy (formerly TMP Worldwide). `careers.blackrock.com` is a Radancy-hosted
+site with `site-tenant-id: 45831`. Server-rendered HTML wrapped in a JSON response — plain
+HTTP, no Playwright needed.
+
+**Endpoint:**
+`GET https://careers.blackrock.com/search-jobs/results`
+Params: `ActiveFacetID=45831`, `CurrentPage=N`, `RecordsPerPage=25`, `IsPagination=True`
+(False on page 1). Returns JSON: `{ results: "<html>...</html>", hasJobs: bool }`.
+
+**HTML structure inside the JSON wrapper:**
+- Total: `data-total-results="N"` on the `<section id="search-results">` element
+- Each job: `<li class="section3__search-results-li">`
+- URL: `href="/job/{city}/{slug}/45831/{jobId}"`
+- Title: `<h2 class="section3__job-title">{title}</h2>`
+- Location: `<span class="section3__job-info">{location}</span>`
+
+**Location filtering:** No server-side location filter works via URL params — all 494 global
+jobs are returned regardless. Filtering applied client-side via `portals.yml` allow/block lists.
+BlackRock has London and Edinburgh offices (UK); no Zurich jobs currently.
+
+**Test result:** 494 jobs fetched, 5 relevant matches (all London):
+- Financial Quantitative Modeler, Aladdin Financial Engineering, Associate
+- Associate, Counterparty Credit Risk
+- FX Hedging Oversight – Associate
+- Associate, Securities Lending Trader – Fixed Income
+- Associate, LDI Technology (Algo Engineer) – Fixed Income Solutions
+
+**Pipeline integration:** added as step 14 in `daily-scan.sh` (notify moved to step 15).
+**COMPANIES.md:** moved BlackRock from "not yet automated" to "automated daily scan".
+
+---
+
+### 37. Telegram notification format updated — two sections — 2026-05-15
+
+**Motivation:** The broad title filter (which matches roles at all seniority levels) is
+needed to catch all potentially relevant openings, but users also want a quick-read section
+that highlights only explicitly entry-level roles.
+
+**Solution:** `notify-telegram.mjs` now sends two sections per daily run:
+
+```
+🔔 N new job postings — YYYY-MM-DD
+
+CompanyA
+  • Title · Location
+  • Title · Location
+
+CompanyB
+  • Title · Location
+
+────────────────────────────────────
+
+🎓 Graduate & internship positions (N)
+
+CompanyA
+  • Title · Location
+```
+
+The second section only appears when at least one job matches the entry-level keyword list.
+Jobs are grouped by company in both sections (same format as `full-report.mjs`).
+
+**Entry-level detection** (`isEntryLevel(title)` in `notify-telegram.mjs`):
+Keywords checked (case-insensitive substring match on the job title):
+- Internship, intern, off-cycle, working student, werkstudent
+- Summer/winter/spring analyst
+- Graduate programme/program, graduate analyst, graduate associate,
+  graduate trainee, graduate talent, graduate rotational, new graduate
+- Analyst programme/program, analyst trainee
+- Junior analyst, junior quant, junior researcher, junior associate
+- Entry level, entry-level, new grad
+- Trainee, traineeship, apprentice, apprenticeship
+- Campus hire, campus recruit, rotational programme/program
+
+**Chunking:** both sections are chunked independently to stay under 3800 chars per
+Telegram message. A "continued" suffix is appended to the header when a section spans
+multiple messages.
+
+**No change to `portals.yml`:** the broad filter remains in place. The two-section format
+gives both full visibility and a highlighted shortlist in the same daily message.
+
+---
+
+### Current scraper coverage summary (updated 2026-05-15)
+
+| Platform | Script | Companies |
+|----------|--------|-----------|
+| Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders, Man Group, Winton, Marshall Wace |
+| Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
+| Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners |
+| SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
+| prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
+| Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Radancy ATS (plain HTTP) | `scrape-blackrock.mjs` | BlackRock |
+
+**Total companies with automated daily scanning: 28**
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
 - [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active)
-- [ ] Investigate Workday board names for BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
