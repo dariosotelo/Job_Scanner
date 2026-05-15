@@ -185,7 +185,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 |---------|----|-------------------|
 | Man Group | London / Zurich | Greenhouse EU board (`mangroup`) — automated |
 | Brevan Howard | Geneva | Not on Greenhouse; ATS unknown |
-| Squarepoint Capital | Geneva | Not on Greenhouse; ATS unknown |
+| Squarepoint Capital | Geneva | Greenhouse board (`squarepointcapital`) — automated |
 | Qube Research & Technologies | London / Paris | Not on Greenhouse; ATS unknown |
 
 ### Paris asset managers
@@ -217,7 +217,7 @@ Workday/Greenhouse/Umantis patterns to determine if automation is possible.
 | ZKB | refline.ch (custom ATS, needs scraper) | `apply.refline.ch/792841/search.html` |
 | Citi Zurich | Taleo | `jobs.citi.com/search-jobs/Zurich` |
 | LGT Capital Partners | Custom | `lgtcp.com/en/careers/current-vacancies/` |
-| Squarepoint Capital | Custom | `squarepoint-capital.com/open-opportunities` (Zug) |
+| Squarepoint Capital | Greenhouse (`squarepointcapital`) | `squarepoint-capital.com/open-opportunities` |
 | Worldquant | Custom | `worldquant.com/career-listing/?location=zug-switzerland` |
 | RAM Active Investments | Custom | `ram-ai.com/de/careers/` |
 | Swiss Re | Custom | `careers.swissre.com` |
@@ -297,7 +297,6 @@ Leonteq — custom ATS, not investigated.
 SIX Group — custom ATS, not investigated.
 Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
 Brevan Howard — ATS unknown.
-Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
 Qube Research & Technologies — ATS unknown.
 RAM Active Investments — custom site (ram-ai.com), no standard ATS detected.
 Worldquant — custom site (worldquant.com), no standard ATS detected.
