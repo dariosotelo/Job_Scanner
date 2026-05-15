@@ -65,6 +65,12 @@ const COMPANIES = [
     board:    'lgtcpcurrentvacancies',
     name:     'LGT Capital Partners',
   },
+  {
+    tenant:   'dimensional',
+    instance: 'wd5',
+    board:    'DFA_Careers',
+    name:     'Dimensional Fund Advisors',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];

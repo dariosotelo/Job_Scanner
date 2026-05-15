@@ -177,6 +177,9 @@ tracked_companies:
   - name: Lazard
     careers_url: https://www.lazard.com/careers/jobs/
     scan_method: lazard
+  - name: Dimensional Fund Advisors
+    careers_url: https://dimensional.wd5.myworkdayjobs.com/DFA_Careers
+    scan_method: workday
 
   # ── SuccessFactors custom wrapper ────────────────────────────────────────
   - name: PostFinance

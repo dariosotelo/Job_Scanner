@@ -53,6 +53,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 |---------|--------|----------|-------|-----------|
 | Rothschild & Co | `rothschildandco` | `wd3` | `Rothschildandco_Lateral` | Web search for their Workday URL |
 | Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
+| Dimensional Fund Advisors | `dimensional` | `wd5` | `DFA_Careers` | Found from `careers.dimensional.com` link target (`dimensional.wd5.myworkdayjobs.com/DFA_Careers`) |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
 - Schroders, DWS, AXA, BNP Paribas, Société Générale, Deutsche Bank, Amundi
@@ -130,6 +131,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Allianz | Phenom People | 0 | — | 1 match in dry-run (Portfolio Manager, Frankfurt) |
 | Vontobel | Workday | 0 | — | Added 2026-05-14; 47 jobs live on API |
 | Julius Baer | Workday (×2 boards) | 0 | — | Added 2026-05-14; 1 match in dry-run (Market Risk Controller, Zurich) |
+| Dimensional Fund Advisors | Workday | 0 | — | Added 2026-05-15; careers page links directly to Workday board `DFA_Careers` |
 
 ---
 
@@ -192,6 +194,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Company | Why not automated |
 |---------|-------------------|
 | Amundi | Custom ATS — Workday board name not yet found |
+| Dimensional Fund Advisors | Workday (`dimensional.wd5`, board: `DFA_Careers`) | `dimensional.wd5.myworkdayjobs.com/DFA_Careers` |
 
 ---
 
@@ -265,6 +268,7 @@ Vontobel — Workday API
 Julius Baer — Workday API (two boards: graduates + internships)
 Lombard Odier — Workday API
 LGT Capital Partners — Workday API
+Dimensional Fund Advisors — Workday API
 PostFinance — SuccessFactors custom scraper
 Helvetia — prospective.ch scraper
 Generali Switzerland — prospective.ch scraper
