@@ -268,12 +268,11 @@ Generali Switzerland — prospective.ch scraper
 Allianz — Phenom People scraper (~200 pages, runs slowly)
 Pictet — SuccessFactors Playwright scraper (career012)
 LGT Private Bank — plain HTTP (CoreMedia CMS fragment endpoint)
+Swiss Re — Playwright (intercepts internal JSON API at swissre.com/bin/swissre/search)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
-
-Swiss Re — careers.swissre.com is a React SPA backed by SuccessFactors (career2). Needs API interception (similar approach to UBS). Not added yet.
 Zurich Insurance — careers.zurich.com, ATS not investigated yet.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
 Winton Group — likely Greenhouse but slug not confirmed.

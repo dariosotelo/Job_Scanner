@@ -35,7 +35,10 @@ node scrape-successfactors.mjs >> "$LOG" 2>&1
 # 9. LGT Private Bank scraper (CoreMedia CMS, plain HTTP)
 node scrape-lgt.mjs >> "$LOG" 2>&1
 
-# 10. Notify Telegram if anything new was found today
+# 10. Swiss Re scraper (Cloudflare-protected JSON API via Playwright)
+node scrape-swissre.mjs >> "$LOG" 2>&1
+
+# 11. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

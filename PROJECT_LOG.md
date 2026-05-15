@@ -13,7 +13,7 @@ Automated daily job scanner for quantitative finance roles. Hits company career 
 directly — no aggregators, no manual browsing. Sends a Telegram message once per day
 listing every new job posting found that wasn't seen on a previous run.
 
-Owner: Cesar Dario Sotelo (ETH Zurich MQF, targeting Swiss quant finance roles, Sep 2026).
+Target profile: quantitative finance roles (internships, graduate programs, junior analyst positions) in Switzerland and major European financial hubs.
 Working directory: `/Users/darios/Proyectos/Job_Scanner/`
 
 ---
@@ -308,8 +308,8 @@ To revert to personal DM: change `TELEGRAM_CHAT_ID` back to your own user ID.
 ## Session — 2026-05-13
 
 ### Context
-Setting up career-ops from scratch for Cesar Dario Sotelo Aportela.
-Profile: ETH Zurich MQF student, targeting quantitative finance roles in Switzerland.
+Initial setup of the scanner.
+Target: quantitative finance roles in Switzerland and European financial hubs.
 Tool: https://github.com/santifer/career-ops
 
 ---
@@ -679,7 +679,7 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 
 ---
 
-### Current scraper coverage summary (as of 2026-05-14)
+### Current scraper coverage summary (as of 2026-05-15)
 
 | Platform | Script | Companies |
 |----------|--------|-----------|
@@ -691,8 +691,10 @@ Flags can be combined: `node jobs.mjs --days 7 --filter London`
 | SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
 | prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
 | Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
 
-**Total companies with automated daily scanning: 21**
+**Total companies with automated daily scanning: 23**
 
 ---
 
@@ -829,8 +831,33 @@ contributor or AI agent understands the git workflow before touching the project
 
 ---
 
+### 32. Swiss Re scraper built (`scrape-swissre.mjs`) — 2026-05-15
+
+**ATS:** Swiss Re uses two separate career portals:
+1. `careers.swissre.com` — React SPA backed by SuccessFactors (career2); JS-heavy, redirects from SF URL, impractical to scrape.
+2. `www.swissre.com/careers/jobSearch.html` — older portal backed by a clean JSON API.
+
+**API discovered:** via Playwright network interception.
+`GET https://www.swissre.com/bin/swissre/search?query=&language=en&type=career&employment-type=...&offset=N&rows=10`
+Response: `{ total, totalPages, positions: [{ id, title, city, country, employmentType, applyUrl }] }`
+
+**Cloudflare protection:** direct `curl`/`fetch` returns a Cloudflare challenge page. Playwright's
+headless browser session bypasses it. Subsequent pages (offset > 0) are fetched using
+`page.evaluate(fetch, url)` which inherits the browser's session and cookies.
+
+**Employment-type filter** (applied in the initial URL so the server filters server-side):
+- `Internship`, `JuniorPower@swissre`, `Apprentices@swissre`
+
+Location filtering is left to `portals.yml` (same as all other scrapers).
+
+**Job URL:** `https://www.swissre.com` + `position.applyUrl`
+
+**Pipeline integration:** added as step 10 in `daily-scan.sh` (before notify-telegram).
+
+---
+
 ### To-do / Next steps
-- [ ] Add LGT Private Bank (lgt.com) — proprietary JS-rendered CMS, needs Playwright
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active, Swiss Re, Zurich Insurance)
+- [ ] Add more companies as career page URLs are provided (Squarepoint, Worldquant, RAM Active, Zurich Insurance)
+- [ ] Investigate Workday board names for Goldman Sachs, JPMorgan, BlackRock, Morgan Stanley, Schroders, BNP Paribas, Deutsche Bank, HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
