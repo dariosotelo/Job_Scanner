@@ -243,11 +243,17 @@ running `pip install` for a Job Scanner task, stop and reconsider.
 
 The data files are intentionally personal. Two people running the scanner independently will each track their own "seen" URLs. That's fine — the scanner is designed to be run by one person per instance.
 
-**Workflow for contributors:**
+**Workflow for contributors — use your own branch:**
+
+Every contributor should work on a personal branch, not directly on `main`. This eliminates
+merge conflicts entirely — changes reach `main` only through a pull request that can be
+reviewed and merged cleanly.
 
 ```bash
-# Before starting any work — always pull first
+# One-time setup: create your personal branch
+git checkout main
 git pull origin main
+git checkout -b your-name/additions   # e.g. alice/add-goldman-scraper
 
 # Make your changes (add a company, fix a scraper, etc.)
 # ...
@@ -258,17 +264,18 @@ git diff
 
 # Stage only scraper code and docs
 git add scrape-*.mjs scan.mjs jobs.mjs notify-telegram.mjs daily-scan.sh
-git add PROJECT_LOG.md portals.example.yml README.md   # docs are fine
+git add PROJECT_LOG.md portals.example.yml README.md
 
-# Commit and push
+# Commit and push your branch
 git commit -m "short description of what changed"
-git push origin main
+git push origin your-name/additions
+
+# Open a pull request on GitHub → merge into main when ready
+# After your PR is merged, update your local main:
+git checkout main && git pull origin main
 ```
 
-**If two people edit the same file simultaneously:**
-
-The most likely conflict source is `PROJECT_LOG.md` (everyone appends to it) and the
-scraper files (everyone adds companies). To minimise conflicts:
+**If you must push directly to main** (e.g. small urgent fix):
 
 1. **Pull before every session** (`git pull` is the first command you run).
 2. **Keep commits small and focused** — one company addition per commit, not a batch.
