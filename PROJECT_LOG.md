@@ -229,6 +229,66 @@ running `pip install` for a Job Scanner task, stop and reconsider.
 
 ---
 
+### Contributing & avoiding conflicts
+
+**What is and isn't shared via git:**
+
+| File / folder | Committed? | Why |
+|---|---|---|
+| `*.mjs` scraper files | ✅ yes | shared code — the thing to collaborate on |
+| `PROJECT_LOG.md` | ✅ yes | shared knowledge base |
+| `portals.yml` | ❌ gitignored | **personal config** — each person keeps their own copy |
+| `.env` | ❌ gitignored | **personal secrets** — your bot token + chat ID |
+| `data/` (all files) | ❌ gitignored | **personal scan history** — never shared |
+
+The data files are intentionally personal. Two people running the scanner independently will each track their own "seen" URLs. That's fine — the scanner is designed to be run by one person per instance.
+
+**Workflow for contributors:**
+
+```bash
+# Before starting any work — always pull first
+git pull origin main
+
+# Make your changes (add a company, fix a scraper, etc.)
+# ...
+
+# Check what you're about to commit — never commit portals.yml, .env, or data/
+git status
+git diff
+
+# Stage only scraper code and docs
+git add scrape-*.mjs scan.mjs jobs.mjs notify-telegram.mjs daily-scan.sh
+git add PROJECT_LOG.md portals.example.yml README.md   # docs are fine
+
+# Commit and push
+git commit -m "short description of what changed"
+git push origin main
+```
+
+**If two people edit the same file simultaneously:**
+
+The most likely conflict source is `PROJECT_LOG.md` (everyone appends to it) and the
+scraper files (everyone adds companies). To minimise conflicts:
+
+1. **Pull before every session** (`git pull` is the first command you run).
+2. **Keep commits small and focused** — one company addition per commit, not a batch.
+3. **If you hit a merge conflict** in `PROJECT_LOG.md`, keep both sections and adjust the
+   numbering. The log is append-only, so conflicts are usually just two people adding entries
+   at the same position — both entries should be kept.
+4. **Never force-push** (`git push --force`). If your push is rejected, pull first, resolve,
+   then push.
+
+**Adding a company — the complete checklist:**
+
+- [ ] Add the company to the relevant scraper's `COMPANIES` array (or `portals.yml` for
+      Greenhouse/Lever/Ashby companies)
+- [ ] Test with `--dry-run` before committing
+- [ ] Update `portals.example.yml` if you added a new entry type
+- [ ] Add a short entry to `PROJECT_LOG.md` (next numbered entry after the last one)
+- [ ] `git pull`, then `git add` only the changed scraper + log, then `git push`
+
+---
+
 ### Sharing notifications with friends (Telegram channel approach)
 
 To share job notifications with friends without them running the scanner:
@@ -749,6 +809,23 @@ in the weather bot's WU forecast scraper and crashed its scheduled cron jobs.
 
 Constraint added to the "Technical gotchas" section at the top of this file so future
 contributors and AI agents see it before any environment work.
+
+---
+
+### 31. Collaboration guidelines added to project — 2026-05-15
+
+Added a "Contributing & avoiding conflicts" section to the top briefing so any new
+contributor or AI agent understands the git workflow before touching the project.
+
+**Key points documented:**
+- `portals.yml`, `.env`, and the entire `data/` folder are gitignored on purpose — each
+  person keeps their own copy. Never commit them.
+- Always `git pull` before starting a session and before pushing.
+- Conflicts in `PROJECT_LOG.md` (the most likely conflict source) should keep both entries
+  — the log is append-only, so merge conflicts usually mean two people added entries at
+  the same position.
+- Checklist for adding a company: add to COMPANIES array → `--dry-run` test → update
+  `portals.example.yml` → add log entry → pull → push.
 
 ---
 
