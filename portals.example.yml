@@ -161,6 +161,9 @@ tracked_companies:
   - name: Rothschild & Co
     careers_url: https://rothschildandco.wd3.myworkdayjobs.com/Rothschildandco_Lateral
     scan_method: workday
+  - name: Goldman Sachs
+    careers_url: https://higher.gs.com/results
+    scan_method: goldman
 
   # ── SuccessFactors custom wrapper ────────────────────────────────────────
   - name: PostFinance

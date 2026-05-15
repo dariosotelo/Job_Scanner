@@ -2,7 +2,7 @@
 
 Automated daily job scanner for finance roles. Hits company career portals directly — no scraping aggregators, no duplicates, Telegram notification when something new appears.
 
-Covers 7 ATS platforms out of the box:
+Covers 8 ATS platforms out of the box:
 
 | Platform | Companies (examples) |
 |----------|---------------------|
@@ -13,6 +13,7 @@ Covers 7 ATS platforms out of the box:
 | SuccessFactors | PostFinance |
 | prospective.ch | Helvetia, Generali Switzerland |
 | Phenom People | Allianz |
+| Higher GraphQL | Goldman Sachs |
 
 ---
 
@@ -55,10 +56,11 @@ cp .env.example .env
 ### 4. Run a test
 
 ```bash
-node daily-scan.sh --dry-run   # preview without writing anything
+bash daily-scan.sh             # full pipeline
 # or run individual scrapers:
 node scan.mjs --dry-run
 node scrape-ubs.mjs --dry-run
+node scrape-goldman.mjs --dry-run
 ```
 
 ### 5. Schedule daily runs
@@ -161,6 +163,10 @@ Find their search-results URL and SuccessFactors company code, add to `scrape-ph
 ```js
 { baseUrl: 'https://careers.yourcompany.com/en/search-results?s=1', applyUrlBase: 'https://career5.successfactors.eu/careers?company=YOURCODE', name: 'Your Company' }
 ```
+
+### Higher GraphQL
+Some sites expose a public role-search API behind their careers frontend.
+Goldman Sachs is the reference implementation in `scrape-goldman.mjs`.
 
 ---
 

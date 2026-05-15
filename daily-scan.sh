@@ -38,7 +38,10 @@ node scrape-lgt.mjs >> "$LOG" 2>&1
 # 10. Swiss Re scraper (Cloudflare-protected JSON API via Playwright)
 node scrape-swissre.mjs >> "$LOG" 2>&1
 
-# 11. Notify Telegram if anything new was found today
+# 11. Goldman Sachs scraper (Higher public GraphQL endpoint)
+node scrape-goldman.mjs >> "$LOG" 2>&1
+
+# 12. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
