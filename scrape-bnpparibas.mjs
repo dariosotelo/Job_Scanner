@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 /**
  * scrape-bnpparibas.mjs
- * Scrapes BNP Paribas UK early-career job listings via the WordPress REST API
- * on careers.bnpparibas.co.uk.
+ * Scrapes BNP Paribas job listings from two WordPress REST API portals:
  *
- * API endpoint:
- *   GET https://careers.bnpparibas.co.uk/wp-json/wp/v2/gbjf_job_post?per_page=100
+ *   UK early-career:   https://careers.bnpparibas.co.uk/wp-json/wp/v2/gbjf_job_post
+ *   Switzerland:       https://www.bnpparibas.ch/wp-json/wp/v2/jobs
  *
  * Notes:
- * - This board covers only the UK early-career portal (internships, graduate programmes).
- *   The main group.bnpparibas careers page is protected by Akamai and not scrapeable.
- * - All postings on this board are already early-career — no programme filter needed.
- * - The `city` field provides a clean location string (e.g. "London").
- * - The `title.rendered` field contains HTML entities that must be decoded.
- * - ~11 global jobs currently; all fit on one page.
+ * - The main group.bnpparibas portal is blocked by Akamai — not scrapeable.
+ * - France (bnpparibas.fr) is also Akamai-blocked; no accessible French portal found.
+ * - UK board: `city` field gives clean location; all postings are early-career.
+ * - Switzerland board: no city field — location defaults to "Switzerland, CH".
+ *   Most job titles use German (Praktikant/in = intern/trainee).
+ * - Both boards are ~11–16 jobs and fit on a single page.
  *
  * Usage:
  *   node scrape-bnpparibas.mjs            # real run
@@ -30,7 +29,18 @@ _require('dotenv').config();
 const SCAN_HISTORY_PATH = 'data/scan-history.tsv';
 const DRY_RUN = process.argv.includes('--dry-run');
 
-const API_URL = 'https://careers.bnpparibas.co.uk/wp-json/wp/v2/gbjf_job_post?per_page=100';
+const PORTALS = [
+  {
+    name:       'BNP Paribas UK',
+    url:        'https://careers.bnpparibas.co.uk/wp-json/wp/v2/gbjf_job_post?per_page=100',
+    getLocation: j => (j.city || '').trim(),
+  },
+  {
+    name:       'BNP Paribas Switzerland',
+    url:        'https://www.bnpparibas.ch/wp-json/wp/v2/jobs?per_page=100',
+    getLocation: () => 'Switzerland, CH',
+  },
+];
 
 // ── Filters ──────────────────────────────────────────────────────
 
@@ -91,8 +101,8 @@ function decodeHtml(str) {
 
 // ── API ───────────────────────────────────────────────────────────
 
-async function fetchAllJobs() {
-  const res = await fetch(API_URL, {
+async function fetchPortal(portal) {
+  const res = await fetch(portal.url, {
     headers: { Accept: 'application/json', 'User-Agent': 'Mozilla/5.0' },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -100,8 +110,9 @@ async function fetchAllJobs() {
 
   return data.map(j => ({
     title:    decodeHtml(j.title?.rendered || ''),
-    location: (j.city || '').trim(),
+    location: portal.getLocation(j),
     url:      j.link || '',
+    portal:   portal.name,
   })).filter(j => j.title && j.url);
 }
 
@@ -111,8 +122,16 @@ async function main() {
   const filters  = loadFilters();
   const seenUrls = loadSeenUrls();
 
-  const allJobs = await fetchAllJobs();
-  console.log(`BNP Paribas: ${allJobs.length} job(s) fetched`);
+  const allJobs = [];
+  for (const portal of PORTALS) {
+    try {
+      const jobs = await fetchPortal(portal);
+      console.log(`${portal.name}: ${jobs.length} job(s) fetched`);
+      allJobs.push(...jobs);
+    } catch (err) {
+      console.error(`  ✗ ${portal.name}: ${err.message}`);
+    }
+  }
 
   const newOffers = allJobs
     .filter(j => titleMatches(j.title, filters))
@@ -120,7 +139,7 @@ async function main() {
     .filter(j => !seenUrls.has(j.url));
 
   console.log(`BNP Paribas: ${newOffers.length} new relevant match(es)`);
-  newOffers.forEach(o => console.log(`  + ${o.title} | ${o.location || 'N/A'}`));
+  newOffers.forEach(o => console.log(`  + ${o.title} | ${o.location || 'N/A'} (${o.portal})`));
 
   if (newOffers.length > 0 && !DRY_RUN) {
     appendToHistory(newOffers);
