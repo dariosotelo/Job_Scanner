@@ -236,3 +236,67 @@ Workday/Greenhouse/Umantis patterns to determine if automation is possible.
 5. Test: `node scrape-workday.mjs --dry-run`
 
 For non-Workday ATS systems, a custom scraper would need to be built (see existing scrapers as reference).
+
+---
+
+## Tracking status — plain summary
+
+Last updated: 2026-05-15
+
+### Automated daily scan ✅
+
+These companies are scraped every day by `daily-scan.sh`. New matching jobs appear in your Telegram channel automatically.
+
+Point72 — Greenhouse API
+AQR Capital Management — Greenhouse API
+Jane Street — Greenhouse API
+Virtu Financial — Greenhouse API
+IMC Trading — Greenhouse API
+Optiver — Greenhouse API
+Flow Traders — Greenhouse API
+UBS — Playwright (intercepts Taleo internal API)
+J. Safra Sarasin — Umantis API
+AXA Switzerland — Umantis API
+Rothschild & Co — Workday API
+Vontobel — Workday API
+Julius Baer — Workday API (two boards: graduates + internships)
+Lombard Odier — Workday API
+LGT Capital Partners — Workday API
+PostFinance — SuccessFactors custom scraper
+Helvetia — prospective.ch scraper
+Generali Switzerland — prospective.ch scraper
+Allianz — Phenom People scraper (~200 pages, runs slowly)
+Pictet — SuccessFactors Playwright scraper (career012)
+LGT Private Bank — plain HTTP (CoreMedia CMS fragment endpoint)
+
+### Not yet automated ❌
+
+These companies are known targets but not yet in the daily scan. Reason noted where known.
+
+Swiss Re — careers.swissre.com is a React SPA backed by SuccessFactors (career2). Needs API interception (similar approach to UBS). Not added yet.
+Zurich Insurance — careers.zurich.com, ATS not investigated yet.
+ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
+Winton Group — likely Greenhouse but slug not confirmed.
+Marshall Wace — likely Greenhouse but slug not confirmed.
+Goldman Sachs — Workday, board name not found yet.
+JPMorgan Chase — Workday, board name not found yet.
+BlackRock — Workday, board name not found yet.
+Morgan Stanley — Workday, board name not found yet.
+Schroders — Workday, board name not found yet.
+BNP Paribas — Workday, board name not found yet.
+Deutsche Bank — Workday, board name not found yet.
+HSBC — Workday, board name not found yet.
+Société Générale — custom ATS, not investigated.
+Amundi — Workday, board name not found yet.
+GAM Investments — custom ATS, not investigated.
+Swiss Life Asset Managers — custom ATS, not investigated.
+Unigestion — custom ATS, not investigated.
+Leonteq — custom ATS, not investigated.
+SIX Group — custom ATS, not investigated.
+Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
+Man Group — ATS unknown.
+Brevan Howard — ATS unknown.
+Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
+Qube Research & Technologies — ATS unknown.
+RAM Active Investments — custom site (ram-ai.com), no standard ATS detected.
+Worldquant — custom site (worldquant.com), no standard ATS detected.
