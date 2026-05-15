@@ -176,6 +176,21 @@ so that `node jobs.mjs --companies` lists them correctly.
 
 ### Technical gotchas (hard-won — read before debugging)
 
+**⚠️ Shared Python environment — DO NOT touch `playwright` or `greenlet`:**
+This machine's `/Users/darios/opt/anaconda3` environment is shared with a weather trading
+bot (`/Users/darios/Proyectos/Prediction_Markets/Weather_Forecast/`) that runs automated
+cron jobs. That bot's WU forecast scraper depends on `playwright` (Python) and `greenlet`.
+
+- **Never** `pip uninstall`, downgrade, or replace either package in the base anaconda3 env.
+- If a Job Scanner task requires a conflicting package version, create a **separate venv**
+  for this project (`python -m venv .venv`) rather than modifying the shared environment.
+- Previously: `greenlet` was uninstalled as a side effect of environment work, which caused
+  `ModuleNotFoundError: No module named 'playwright'` in the weather bot and crashed its
+  scheduled cron jobs.
+
+This project is pure **Node.js** and has no Python dependencies — if you find yourself
+running `pip install` for a Job Scanner task, stop and reconsider.
+
 **prospective.ch:**
 - `fetch()` / undici returns HTTP 503 because the server requires HTTP/2. Must use Node.js
   built-in `http2` module with `http2.connect()`.
@@ -713,6 +728,27 @@ They are both owned by the Princely Family of Liechtenstein but operate as indep
 
 **Workday config:** `tenant: lgtcp`, `instance: wd502`, `board: lgtcpcurrentvacancies`
 **Test result:** 11 jobs found, 0 matches (mostly tech/ops roles at time of scan).
+
+---
+
+### 30. Shared Python environment constraint documented — 2026-05-15
+
+**Context:** `/Users/darios/opt/anaconda3` is shared between this project and a weather
+trading bot at `/Users/darios/Proyectos/Prediction_Markets/Weather_Forecast/`. The weather
+bot runs automated cron jobs and depends on the Python `playwright` and `greenlet` packages.
+
+**Incident:** During a previous Job Scanner session, `greenlet` was uninstalled as a side
+effect of environment changes. This caused `ModuleNotFoundError: No module named 'playwright'`
+in the weather bot's WU forecast scraper and crashed its scheduled cron jobs.
+
+**Rule going forward:**
+- Never `pip uninstall`, downgrade, or replace `playwright` or `greenlet` in the shared env.
+- If a Job Scanner dependency requires a conflicting package version, use a separate venv.
+- Job Scanner is pure Node.js — no Python dependencies. `pip install` for this project is a
+  red flag.
+
+Constraint added to the "Technical gotchas" section at the top of this file so future
+contributors and AI agents see it before any environment work.
 
 ---
 
