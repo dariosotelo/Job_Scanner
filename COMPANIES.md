@@ -306,8 +306,6 @@ SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
 Unigestion — custom ATS, not investigated.
-Leonteq — custom ATS, not investigated.
-SIX Group — custom ATS, not investigated.
 Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
 Brevan Howard — ATS unknown.
 Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
