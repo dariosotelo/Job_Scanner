@@ -38,7 +38,7 @@ Slugs tested during setup (2026-05-13 / 2026-05-14):
 | `lazard` | ❌ 404 | Uses TAL / Oleeo (`lazard-careers.tal.net`), not Greenhouse |
 | `dws` | ❌ 404 | Uses Workday (board name unknown) |
 | `man-group` | ❌ 404 | Wrong slug format; actual board is `mangroup` on Greenhouse EU |
-| `brevanhoward` | ❌ 404 | Not on Greenhouse |
+| `brevanhoward` | ❌ 404 | Not on Greenhouse — uses Workday wd3 (`BH_ExternalCareers`) |
 | `candriam` | ❌ 404 | Not on Greenhouse |
 | `lyxor` | ❌ 404 | Not on Greenhouse |
 
@@ -55,6 +55,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 | Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
 | Dimensional Fund Advisors | `dimensional` | `wd5` | `DFA_Careers` | careers.dimensional.com links to `dimensional.wd5.myworkdayjobs.com/DFA_Careers` |
 | Swiss Life Asset Managers | `swisslife` | `wd3` | `Swiss_Life_Asset_Managers_Career_Site` | User found direct Workday URL; `de-DE` in path is language prefix, board follows it |
+| Brevan Howard | `brevanhoward` | `wd3` | `BH_ExternalCareers` | User provided direct Workday URL (`wd3.myworkdaysite.com/recruiting/brevanhoward/BH_ExternalCareers`) |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
 - DWS, AXA, Société Générale, Amundi
@@ -154,7 +155,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 ### Swiss banks & private banks
 | Company | HQ | Why not automated |
 |---------|----|-------------------|
-| Julius Baer | Zurich | Workday — board name not yet found |
+| ~~Julius Baer~~ | ~~Zurich~~ | Workday — boards `JB_Career_Site_Graduates` + `Internships` — automated via `scrape-workday.mjs` (2026-05-14) |
 | ~~Vontobel~~ | ~~Zurich~~ | Moved to automated (Workday) — 2026-05-14 |
 | Zürcher Kantonalbank (ZKB) | Zurich | Custom ATS |
 | Pictet Group | Geneva | Custom ATS |
@@ -172,7 +173,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | ~~Leonteq~~ | ~~Zurich~~ | Custom JSON API (`careers.leonteq.com/publishedJobs.php`) — automated via `scrape-leonteq.mjs` (2026-05-16) |
 | Swiss Re | Zurich | Custom ATS |
 | Zurich Insurance Group | Zurich | Custom ATS |
-| Baloise Group | Basel | Merging with Helvetia in 2026 — monitor both |
+| Baloise Group | Basel | **Covered by Helvetia scraper** — merger complete, all baloise.com jobs link to jobs.helvetia.com |
 | ~~SIX Group~~ | ~~Zurich~~ | SuccessFactors RMK (`jobs.six-group.com`) — automated via `scrape-six.mjs` (2026-05-16) |
 
 ### Global banks (European offices)
@@ -194,7 +195,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Company | HQ | Why not automated |
 |---------|----|-------------------|
 | Man Group | London / Zurich | Greenhouse EU board (`mangroup`) — automated |
-| Brevan Howard | Geneva | Not on Greenhouse; ATS unknown |
+| ~~Brevan Howard~~ | ~~Geneva~~ | Workday wd3, `BH_ExternalCareers` — automated via `scrape-workday.mjs` (2026-05-16) |
 | Squarepoint Capital | Geneva | Greenhouse (`squarepointcapital`) — automated |
 | Qube Research & Technologies | London / Paris | Not on Greenhouse; ATS unknown |
 
@@ -308,8 +309,7 @@ SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
 Unigestion — custom ATS, not investigated.
-Baloise Group — **covered by Helvetia scraper**. baloise.com/en/jobs now shows only Helvetia jobs (all hrefs go to jobs.helvetia.com); merger is complete.
-~~Brevan Howard~~ — Workday wd3, board BH_ExternalCareers — automated via scrape-workday.mjs (2026-05-16).
+Baloise Group — covered by Helvetia scraper (merger complete; all baloise.com jobs link to jobs.helvetia.com).
 Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
 Qube Research & Technologies — ATS unknown.
 RAM Active Investments — custom site (ram-ai.com), no standard ATS detected.
