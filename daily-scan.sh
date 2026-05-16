@@ -59,7 +59,10 @@ node scrape-schroders.mjs >> "$LOG" 2>&1
 # 17. BNP Paribas scraper (WordPress REST API — UK early-career portal)
 node scrape-bnpparibas.mjs >> "$LOG" 2>&1
 
-# 18. Notify Telegram if anything new was found today
+# 18. Deutsche Bank scraper (Beesite graduate search API, plain HTTP)
+node scrape-deutschebank.mjs >> "$LOG" 2>&1
+
+# 19. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

@@ -1282,7 +1282,67 @@ bug in scrape-lazard). Only the two new company additions were cherry-picked.
 
 ---
 
+---
+
+### 42. Deutsche Bank scraper built (`scrape-deutschebank.mjs`) — 2026-05-16
+
+**ATS discovered:** Beesite — a recruiting platform at `api-deutschebank.beesite.de`.
+Found by loading `careers.db.com/students-graduates/Search-Programmes/#/graduate/results/`
+in Playwright and intercepting XHR requests. The API is public, no auth needed.
+
+**API endpoint:**
+`GET https://api-deutschebank.beesite.de/graduatesearch/?data={JSON}`
+
+The `data` parameter is a URL-encoded JSON object with `LanguageCode`, `SearchParameters`
+(pagination, field list, sort), and `SearchCriteria` (filter array, left empty to get all).
+
+**Coverage:** Graduate and internship board only — ~21 roles currently, all in Germany.
+This board is separate from DB's main professional careers site.
+
+**Key implementation note:** `CountryName` is always returned in German ("Deutschland")
+regardless of `LanguageCode`. Location matching uses `CityName` ("Frankfurt am Main")
+instead. Ambiguous city strings ("Mehrere Standorte", "deutschlandweit") are treated as
+empty so the title filter alone determines relevance.
+
+**0 current matches:** Deutsche Bank uses generic titles ("Internship in Risk", "Internship
+in Global Markets") rather than specific role names. None match the portals.yml positive
+keywords currently. Roles with "market risk", "credit risk", "derivatives", or "asset
+management" in the title will match when posted.
+
+**Job URLs:** `https://db.recsolu.com/external/requisitions/{ID}` (Recsolu ATS).
+
+**Pipeline integration:** added as step 18 in `daily-scan.sh` (notify moved to step 19).
+
+---
+
+### Current scraper coverage summary (updated 2026-05-16)
+
+| Platform | Script | Companies |
+|----------|--------|-----------|
+| Greenhouse / Lever / Ashby API | `scan.mjs` | Point72, AQR, Jane Street, Virtu, IMC, Optiver, Flow Traders, Man Group, Winton, Marshall Wace, Squarepoint Capital |
+| Taleo (Playwright) | `scrape-ubs.mjs` | UBS |
+| Umantis | `scrape-umantis.mjs` | J. Safra Sarasin, AXA Switzerland |
+| Workday | `scrape-workday.mjs` | Rothschild & Co, Vontobel, Julius Baer (×2 boards), Lombard Odier, LGT Capital Partners, Morgan Stanley, Dimensional Fund Advisors |
+| SuccessFactors custom | `scrape-postfinance.mjs` | PostFinance |
+| SuccessFactors Playwright | `scrape-successfactors.mjs` | Pictet |
+| prospective.ch | `scrape-prospective.mjs` | Helvetia, Generali Switzerland |
+| Phenom People | `scrape-phenom.mjs` | Allianz |
+| CoreMedia CMS (plain HTTP) | `scrape-lgt.mjs` | LGT Private Bank |
+| Cloudflare-protected JSON API (Playwright) | `scrape-swissre.mjs` | Swiss Re |
+| Server-rendered HTML (plain HTTP) | `scrape-zurich.mjs` | Zurich Insurance |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-jpmorgan.mjs` | JPMorgan Chase |
+| Oracle HCM CE REST API (plain HTTP) | `scrape-schroders.mjs` | Schroders |
+| Higher GraphQL (plain HTTP) | `scrape-goldman.mjs` | Goldman Sachs |
+| Radancy ATS (plain HTTP) | `scrape-blackrock.mjs` | BlackRock |
+| TAL / Oleeo (plain HTTP) | `scrape-lazard.mjs` | Lazard |
+| WordPress REST API (plain HTTP) | `scrape-bnpparibas.mjs` | BNP Paribas (UK + Switzerland) |
+| Beesite graduate API (plain HTTP) | `scrape-deutschebank.mjs` | Deutsche Bank |
+
+**Total companies with automated daily scanning: 35**
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Investigate Workday board names for Deutsche Bank, HSBC, Amundi
+- [ ] Investigate Workday board names for HSBC, Amundi
 - [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)

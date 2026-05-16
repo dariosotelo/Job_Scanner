@@ -56,7 +56,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 | Dimensional Fund Advisors | `dimensional` | `wd5` | `DFA_Careers` | careers.dimensional.com links to `dimensional.wd5.myworkdayjobs.com/DFA_Careers` |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
-- DWS, AXA, Société Générale, Deutsche Bank, Amundi
+- DWS, AXA, Société Générale, Amundi
 
 To find the board name: visit the company's careers page, click any job, and read
 the Workday URL: `{tenant}.{instance}.myworkdayjobs.com/{board}/job/...`
@@ -176,7 +176,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Morgan Stanley | London, Frankfurt, Paris | Workday wd5 — automated via `scrape-workday.mjs` |
 | Schroders | London, Zurich | Oracle HCM CE — automated via `scrape-schroders.mjs` |
 | BNP Paribas | Paris, London | WordPress REST API (UK early-career) — automated via `scrape-bnpparibas.mjs` |
-| Deutsche Bank | Frankfurt, London | Workday — board name not yet found |
+| Deutsche Bank | Frankfurt, London | Beesite graduate API (`api-deutschebank.beesite.de`) — automated via `scrape-deutschebank.mjs` |
 | Société Générale | Paris, London | Custom ATS |
 | HSBC | Geneva, Zurich | Workday — board name not yet found |
 | Allianz Global Investors | Frankfurt, Paris | Likely covered by Allianz Phenom scraper |
@@ -286,12 +286,13 @@ Schroders — Oracle HCM CE REST API (plain HTTP, 37 global jobs, client-side fi
 BNP Paribas — WordPress REST API (careers.bnpparibas.co.uk UK early-career portal, ~11 jobs)
 Dimensional Fund Advisors — Workday API (wd5 instance, DFA_Careers board, 52 global jobs)
 Squarepoint Capital — Greenhouse API (slug: squarepointcapital, 82 global jobs)
+Deutsche Bank — Beesite graduate search API (plain HTTP, ~21 graduate/internship roles)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Deutsche Bank — Workday, board name not found yet.
+Deutsche Bank — Beesite graduate search API (plain HTTP, `api-deutschebank.beesite.de`, ~21 jobs)
 HSBC — Workday, board name not found yet.
 Société Générale — custom ATS, not investigated.
 Amundi — Workday, board name not found yet.
