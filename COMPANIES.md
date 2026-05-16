@@ -139,6 +139,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Swiss Life Asset Managers | Workday | 0 | — | Added 2026-05-16; 46 jobs; 2 dry-run matches (Praktikant Asset Mgmt Frankfurt; Stage Quant Risk Analyst Paris) |
 | Leonteq | Custom JSON API | 0 | — | Added 2026-05-16; 21 jobs; 1 dry-run match (Graduate Program Retail Flow Trading, Zürich). Note: location normalised — API returns "Zürich" (umlaut). |
 | SIX Group | SuccessFactors RMK HTML | 0 | — | Added 2026-05-16; 108 jobs; 0 current matches (Zurich internship present but no positive keyword hit; relevant roles appear when posted) |
+| Brevan Howard | Workday | 0 | — | Added 2026-05-16; 8 jobs; 1 live match (2026 Summer Internship Programme – Macro Trading, Geneva) |
 
 ---
 
@@ -298,6 +299,7 @@ Société Générale — CES / search-profile API (Playwright, OAuth token captu
 Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxembourg, ~134 jobs)
 GAM Investments — Workday API (wd3 instance, GAM board, ~2 jobs)
 Swiss Life Asset Managers — Workday API (wd3 instance, Swiss_Life_Asset_Managers_Career_Site board, ~46 jobs)
+Brevan Howard — Workday API (wd3 instance, BH_ExternalCareers board, ~8 jobs)
 Leonteq — custom JSON API (careers.leonteq.com/publishedJobs.php, ~21 jobs)
 SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 
@@ -306,8 +308,8 @@ SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
 Unigestion — custom ATS, not investigated.
-Baloise Group — custom ATS (merging with Helvetia in 2026 — monitor both).
-Brevan Howard — ATS unknown.
+Baloise Group — **covered by Helvetia scraper**. baloise.com/en/jobs now shows only Helvetia jobs (all hrefs go to jobs.helvetia.com); merger is complete.
+~~Brevan Howard~~ — Workday wd3, board BH_ExternalCareers — automated via scrape-workday.mjs (2026-05-16).
 Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
 Qube Research & Technologies — ATS unknown.
 RAM Active Investments — custom site (ram-ai.com), no standard ATS detected.
