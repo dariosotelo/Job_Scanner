@@ -1,6 +1,6 @@
 # Company Coverage
 
-Last updated: 2026-05-15
+Last updated: 2026-05-16
 
 ---
 
@@ -131,6 +131,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Allianz | Phenom People | 0 | — | 1 match in dry-run (Portfolio Manager, Frankfurt) |
 | Vontobel | Workday | 0 | — | Added 2026-05-14; 47 jobs live on API |
 | Julius Baer | Workday (×2 boards) | 0 | — | Added 2026-05-14; 1 match in dry-run (Market Risk Controller, Zurich) |
+| HSBC | GroupGTI / Solr (plain HTTP) | 0 | — | Added 2026-05-16; ~12 jobs currently, mostly APAC. London/Frankfurt roles auto-caught when posted. |
 
 ---
 
@@ -177,8 +178,8 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Schroders | London, Zurich | Oracle HCM CE — automated via `scrape-schroders.mjs` |
 | BNP Paribas | Paris, London | WordPress REST API (UK early-career) — automated via `scrape-bnpparibas.mjs` |
 | Deutsche Bank | Frankfurt, London | Beesite graduate API (`api-deutschebank.beesite.de`) — automated via `scrape-deutschebank.mjs` |
-| Société Générale | Paris, London | Custom ATS |
-| HSBC | Geneva, Zurich | Workday — board name not yet found |
+| Société Générale | Paris, London | CES (`api.socgen.com`) — OAuth via SG SSO; Playwright needed |
+| HSBC | Geneva, Zurich | GroupGTI / Solr — automated via `scrape-hsbc.mjs` |
 | Allianz Global Investors | Frankfurt, Paris | Likely covered by Allianz Phenom scraper |
 
 ### Quant & systematic funds
@@ -243,7 +244,7 @@ For non-Workday ATS systems, a custom scraper would need to be built (see existi
 
 ## Tracking status — plain summary
 
-Last updated: 2026-05-15
+Last updated: 2026-05-16
 
 ### Automated daily scan ✅
 
@@ -284,17 +285,14 @@ Morgan Stanley — Workday API (wd5 instance, External board, UK+Germany+France 
 Dimensional Fund Advisors — Workday API (wd5 instance, DFA_Careers board)
 Schroders — Oracle HCM CE REST API (plain HTTP, 37 global jobs, client-side filter)
 BNP Paribas — WordPress REST API (careers.bnpparibas.co.uk UK early-career portal, ~11 jobs)
-Dimensional Fund Advisors — Workday API (wd5 instance, DFA_Careers board, 52 global jobs)
-Squarepoint Capital — Greenhouse API (slug: squarepointcapital, 82 global jobs)
 Deutsche Bank — Beesite graduate search API (plain HTTP, ~21 graduate/internship roles)
+HSBC — GroupGTI / Solr API (plain HTTP GET, hsbcearlycareers.groupgti.com, ~12 jobs)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Deutsche Bank — Beesite graduate search API (plain HTTP, `api-deutschebank.beesite.de`, ~21 jobs)
-HSBC — Workday, board name not found yet.
-Société Générale — custom ATS, not investigated.
+Société Générale — CES (`api.socgen.com`); requires OAuth via SG SGMarkets SSO; Playwright needed.
 Amundi — Workday, board name not found yet.
 GAM Investments — custom ATS, not investigated.
 Swiss Life Asset Managers — custom ATS, not investigated.

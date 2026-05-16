@@ -1337,12 +1337,68 @@ management" in the title will match when posted.
 | TAL / Oleeo (plain HTTP) | `scrape-lazard.mjs` | Lazard |
 | WordPress REST API (plain HTTP) | `scrape-bnpparibas.mjs` | BNP Paribas (UK + Switzerland) |
 | Beesite graduate API (plain HTTP) | `scrape-deutschebank.mjs` | Deutsche Bank |
+| GroupGTI / Solr API (plain HTTP GET) | `scrape-hsbc.mjs` | HSBC |
 
-**Total companies with automated daily scanning: 35**
+**Total companies with automated daily scanning: 36**
+
+---
+
+### 43. HSBC scraper built (`scrape-hsbc.mjs`) — 2026-05-16
+
+**ATS discovered:** GroupGTI — a recruiting SaaS at `hsbcearlycareers.groupgti.com`.
+Found by following the user-provided URL `https://hsbcearlycareers.groupgti.com/VacancyPosting/Search`.
+
+**API endpoint:**
+`GET https://hsbcearlycareers.groupgti.com/Search/CandidateVacancies?q=*:*&rows=100&wt=json&fl=...`
+
+The endpoint is public Solr (plain HTTP GET, no auth). POST requests return 302 because they
+require a session cookie the SPA sets on the landing page; GET works without it.
+
+**Job URL format:** SPA hash routing — `https://hsbcearlycareers.groupgti.com/VacancyPosting/Search#!/{slug}`
+where `{slug}` is the `dynamicstring_ShortName` field (e.g. `group-infrastructure---graduate---singapore`).
+Individual `VacancyPosting/{slug}` paths all 302 → `/Error/NotFound` (client-side routing only).
+
+**Coverage:** 12 total jobs as of 2026-05-16 — mostly APAC (Singapore, Hong Kong, Mainland China)
+and UK apprenticeships. No current London/Frankfurt/Zurich roles, but the scraper will catch
+them automatically when posted.
+
+**Location field:** `dynamicstring_VacancyDetail_Location_Text` (e.g. "UK", "Singapore",
+"Mainland China"). Falls back to `dynamicstring_VacancyDetail_City_Text` if blank.
+
+**0 current matches:** all existing roles are blocked by location filter (APAC) or don't
+match title filter (apprenticeships, contact centre). Expected once finance roles in European
+hubs are posted.
+
+**Pipeline integration:** added as step 19 in `daily-scan.sh` (notify moved to step 20).
+
+---
+
+### 44. Société Générale investigated; portals.yml filter improvements — 2026-05-16
+
+**Société Générale ATS:** Drupal 10 site using a custom CES (Cognitive Enterprise Search)
+backend at `https://api.socgen.com/business-support/.../cognitive-service-knowledge/api/v1`.
+Discovered from `drupalSettings.quantum.base_url` embedded in page HTML.
+
+The search is proxied through `/search-proxy.php` (which returns 404 to curl — likely
+Drupal-routed and session-dependent). Auth flow: OAuth2 client credentials via
+`https://sso.sgmarkets.com/sgconnect/oauth2/access_token`.
+
+**Not automatable via plain HTTP.** Would require Playwright with session + OAuth token
+extraction. The drupalSettings embeds location codes for all 1560 jobs, but title/URL
+data comes from the CES API only.
+
+**Filter improvements (portals.yml):**
+- Added `Graduate` (standalone) — catches any title containing "Graduate", per user request
+  ("anything that has graduate should be shown")
+- Added `Internship in Risk` — for future Deutsche Bank-style titles
+- Added `in Risk` — catches current DB format: "Internship (m/f/x) in Risk 2026"
+  (gender designation sits between "Internship" and "in Risk", so exact phrase doesn't match)
+
+After change: Deutsche Bank "Internship (m/f/x) in Risk 2026" → 1 match ✓
 
 ---
 
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Investigate Workday board names for HSBC, Amundi
-- [ ] Consider adding Baloise Group (merging with Helvetia in 2026 — monitor both portals)
+- [ ] Investigate Workday board names for Amundi
+- [ ] Société Générale: consider Playwright scraper if needed in future

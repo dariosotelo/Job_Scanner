@@ -62,7 +62,10 @@ node scrape-bnpparibas.mjs >> "$LOG" 2>&1
 # 18. Deutsche Bank scraper (Beesite graduate search API, plain HTTP)
 node scrape-deutschebank.mjs >> "$LOG" 2>&1
 
-# 19. Notify Telegram if anything new was found today
+# 19. HSBC scraper (GroupGTI / Solr API, plain HTTP GET)
+node scrape-hsbc.mjs >> "$LOG" 2>&1
+
+# 20. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
