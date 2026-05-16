@@ -178,7 +178,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Schroders | London, Zurich | Oracle HCM CE — automated via `scrape-schroders.mjs` |
 | BNP Paribas | Paris, London | WordPress REST API (UK early-career) — automated via `scrape-bnpparibas.mjs` |
 | Deutsche Bank | Frankfurt, London | Beesite graduate API (`api-deutschebank.beesite.de`) — automated via `scrape-deutschebank.mjs` |
-| Société Générale | Paris, London | CES (`api.socgen.com`) — OAuth via SG SSO; Playwright needed |
+| Société Générale | Paris, Frankfurt, London | CES (`api.socgen.com/…/search-profile`) — Playwright scraper via `scrape-societegenerale.mjs` |
 | HSBC | Geneva, Zurich | GroupGTI / Solr — automated via `scrape-hsbc.mjs` |
 | Allianz Global Investors | Frankfurt, Paris | Likely covered by Allianz Phenom scraper |
 
@@ -287,12 +287,13 @@ Schroders — Oracle HCM CE REST API (plain HTTP, 37 global jobs, client-side fi
 BNP Paribas — WordPress REST API (careers.bnpparibas.co.uk UK early-career portal, ~11 jobs)
 Deutsche Bank — Beesite graduate search API (plain HTTP, ~21 graduate/internship roles)
 HSBC — GroupGTI / Solr API (plain HTTP GET, hsbcearlycareers.groupgti.com, ~12 jobs)
+Société Générale — CES / search-profile API (Playwright, OAuth token captured from page auto-search, ~242 Trainee+Internship roles)
+Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxembourg, ~134 jobs)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Société Générale — CES (`api.socgen.com`); requires OAuth via SG SGMarkets SSO; Playwright needed.
 Amundi — Workday, board name not found yet.
 GAM Investments — custom ATS, not investigated.
 Swiss Life Asset Managers — custom ATS, not investigated.

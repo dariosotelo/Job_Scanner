@@ -1338,8 +1338,10 @@ management" in the title will match when posted.
 | WordPress REST API (plain HTTP) | `scrape-bnpparibas.mjs` | BNP Paribas (UK + Switzerland) |
 | Beesite graduate API (plain HTTP) | `scrape-deutschebank.mjs` | Deutsche Bank |
 | GroupGTI / Solr API (plain HTTP GET) | `scrape-hsbc.mjs` | HSBC |
+| CES / search-profile API (Playwright) | `scrape-societegenerale.mjs` | Société Générale |
+| TalentSoft HTML (plain HTTP) | `scrape-amundi.mjs` | Amundi |
 
-**Total companies with automated daily scanning: 36**
+**Total companies with automated daily scanning: 38**
 
 ---
 
@@ -1398,7 +1400,56 @@ After change: Deutsche Bank "Internship (m/f/x) in Risk 2026" → 1 match ✓
 
 ---
 
+### 45. Société Générale scraper built (`scrape-societegenerale.mjs`) — 2026-05-16
+
+**ATS:** Drupal 10 with proprietary CES (Cognitive Enterprise Search) backend at
+`https://api.socgen.com/…/cognitive-service-knowledge/api/v1/search-profile`.
+
+**Auth flow:** The page JS fetches an OAuth JWT from `sso.sgmarkets.com`, then POSTs to
+the server-side proxy at `/search-proxy.php` with headers:
+- `authorization-api: Bearer {JWT}` — OAuth token (short-lived)
+- `x-proxy-url: https://api.socgen.com/…/search-profile` — real API target
+
+Playwright navigates to the search page, which triggers the JS to fetch the JWT and fire
+the auto-search. We intercept the first proxy _request_ (before response) to capture
+the `authorization-api` header. All subsequent paginated calls reuse that token.
+
+**Key debugging findings:**
+- The proxy URL is `/search-profile` not `/search` — modifying it caused 404.
+- Manual `page.evaluate` fetch to `/search-proxy.php` without auth headers returns 404.
+- Auto-search uses `skipCount: 10`; we call with `skipCount: 100` for efficiency.
+- 242 total EN-language Trainee+Internship jobs across all SG geographies.
+- 1 current match: "Intern in Retail Structured Products Public Distribution M/F/D" (Frankfurt).
+
+**Pipeline integration:** added as step 20 in `daily-scan.sh`.
+
+---
+
+### 46. Amundi scraper built (`scrape-amundi.mjs`) — 2026-05-16
+
+**ATS:** TalentSoft (Cegid) — fully server-rendered HTML at `https://jobs.amundi.com`.
+Plain HTTP, no auth, no Playwright needed.
+
+**Pagination:** `?page=N` (50 items per page). Country filter via `?changefacet=1&facet_JobCountry={ID}`.
+
+**Target countries** (by facet ID, as of 2026-05-16):
+| Country | Facet ID | Jobs |
+|---------|----------|------|
+| France | 79 | 107 |
+| Luxembourg | 119 | 13 |
+| Germany | 29 | 9 |
+| United Kingdom | 162 | 5 |
+
+**Location field:** set to country name (no city visible in list pages).
+The French-language postings are correctly blocked by the negative title filter
+("Alternance", "Chargé", "Analyste", etc.).
+
+**1 current match:** "Asset Management - International Business Developer H/F" (Paris, France).
+
+**Pipeline integration:** added as step 21 in `daily-scan.sh` (notify moved to step 22).
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Investigate Workday board names for Amundi
-- [ ] Société Générale: consider Playwright scraper if needed in future
+- [ ] Investigate Workday board names for remaining companies (GAM, Swiss Life)

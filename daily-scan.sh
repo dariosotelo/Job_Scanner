@@ -65,7 +65,13 @@ node scrape-deutschebank.mjs >> "$LOG" 2>&1
 # 19. HSBC scraper (GroupGTI / Solr API, plain HTTP GET)
 node scrape-hsbc.mjs >> "$LOG" 2>&1
 
-# 20. Notify Telegram if anything new was found today
+# 20. Société Générale scraper (CES / search-profile API, OAuth via Playwright)
+node scrape-societegenerale.mjs >> "$LOG" 2>&1
+
+# 21. Amundi scraper (TalentSoft HTML, plain HTTP)
+node scrape-amundi.mjs >> "$LOG" 2>&1
+
+# 22. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
