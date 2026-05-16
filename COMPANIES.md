@@ -153,56 +153,129 @@ Most of these companies use Workday or proprietary ATS systems that block automa
 scraping. To automate them, the Workday board name needs to be found from their careers URL.
 
 ### Swiss banks & private banks
-| Company | HQ | Why not automated |
-|---------|----|-------------------|
-| ~~Julius Baer~~ | ~~Zurich~~ | Workday — boards `JB_Career_Site_Graduates` + `Internships` — automated via `scrape-workday.mjs` (2026-05-14) |
-| ~~Vontobel~~ | ~~Zurich~~ | Moved to automated (Workday) — 2026-05-14 |
-| Zürcher Kantonalbank (ZKB) | Zurich | Custom ATS |
-| Pictet Group | Geneva | Custom ATS |
-| Lombard Odier | Geneva | Custom ATS |
-| Basellandschaftliche Kantonalbank (BLKB) | Basel | Custom ATS |
-| Banque Cantonale Vaudoise (BCV) | Lausanne | Custom ATS |
+| Company | HQ | Status |
+|---------|----|--------|
+| ~~Julius Baer~~ | ~~Zurich~~ | Automated — Workday (`JB_Career_Site_Graduates` + `Internships`) |
+| ~~Vontobel~~ | ~~Zurich~~ | Automated — Workday |
+| ~~Rothschild & Co~~ | ~~Geneva~~ | Automated — Workday |
+| ~~Lombard Odier~~ | ~~Geneva~~ | Automated — Workday |
+| ~~Pictet~~ | ~~Geneva~~ | Automated — SuccessFactors Playwright |
+| ~~J. Safra Sarasin~~ | ~~Zurich~~ | Automated — Umantis |
+| ~~PostFinance~~ | ~~Bern~~ | Automated — SuccessFactors custom API |
+| Zürcher Kantonalbank (ZKB) | Zurich | Not automated — refline.ch custom ATS |
+| EFG International | Geneva / Zurich | Not automated — ATS unknown |
+| Basellandschaftliche Kantonalbank (BLKB) | Basel | Not automated — ATS unknown |
+| Banque Cantonale Vaudoise (BCV) | Lausanne | Not automated — ATS unknown |
+| Citi | Zurich / London | Not automated — Taleo ATS |
 
 ### Swiss asset managers & insurers
-| Company | HQ | Why not automated |
-|---------|----|-------------------|
-| Partners Group | Zug | Custom ATS |
-| ~~GAM Investments~~ | ~~Zurich~~ | Workday (`gam.wd3`, board: `GAM`) — automated via `scrape-workday.mjs` |
-| ~~Swiss Life Asset Managers~~ | ~~Zurich~~ | Workday (`swisslife.wd3`, board: `Swiss_Life_Asset_Managers_Career_Site`) — automated via `scrape-workday.mjs` (2026-05-16) |
-| Unigestion | Geneva | Custom ATS |
-| ~~Leonteq~~ | ~~Zurich~~ | Custom JSON API (`careers.leonteq.com/publishedJobs.php`) — automated via `scrape-leonteq.mjs` (2026-05-16) |
-| Swiss Re | Zurich | Custom ATS |
-| Zurich Insurance Group | Zurich | Custom ATS |
-| Baloise Group | Basel | **Covered by Helvetia scraper** — merger complete, all baloise.com jobs link to jobs.helvetia.com |
-| ~~SIX Group~~ | ~~Zurich~~ | SuccessFactors RMK (`jobs.six-group.com`) — automated via `scrape-six.mjs` (2026-05-16) |
-
-### Global banks (European offices)
-| Company | Relevant offices | Why not automated |
-|---------|-----------------|-------------------|
-| Goldman Sachs | Zurich, Frankfurt, London | Higher GraphQL — automated via `scrape-goldman.mjs` |
-| Lazard | London, Paris | TAL / Oleeo — automated via `scrape-lazard.mjs` |
-| JPMorgan Chase | Zurich, London, Frankfurt | Oracle HCM CE — automated via `scrape-jpmorgan.mjs` |
-| BlackRock | Zurich, London | Radancy ATS — automated via `scrape-blackrock.mjs` |
-| Morgan Stanley | London, Frankfurt, Paris | Workday wd5 — automated via `scrape-workday.mjs` |
-| Schroders | London, Zurich | Oracle HCM CE — automated via `scrape-schroders.mjs` |
-| BNP Paribas | Paris, London | WordPress REST API (UK early-career) — automated via `scrape-bnpparibas.mjs` |
-| Deutsche Bank | Frankfurt, London | Beesite graduate API (`api-deutschebank.beesite.de`) — automated via `scrape-deutschebank.mjs` |
-| Société Générale | Paris, Frankfurt, London | CES (`api.socgen.com/…/search-profile`) — Playwright scraper via `scrape-societegenerale.mjs` |
-| HSBC | Geneva, Zurich | GroupGTI / Solr — automated via `scrape-hsbc.mjs` |
-| Allianz Global Investors | Frankfurt, Paris | Likely covered by Allianz Phenom scraper |
+| Company | HQ | Status |
+|---------|----|--------|
+| ~~Swiss Life Asset Managers~~ | ~~Zurich~~ | Automated — Workday |
+| ~~GAM Investments~~ | ~~Zurich~~ | Automated — Workday |
+| ~~Leonteq~~ | ~~Zurich~~ | Automated — custom JSON API |
+| ~~SIX Group~~ | ~~Zurich~~ | Automated — SuccessFactors RMK HTML |
+| ~~Helvetia~~ | ~~Basel~~ | Automated — prospective.ch |
+| ~~Generali Switzerland~~ | ~~Zurich~~ | Automated — prospective.ch |
+| ~~AXA Switzerland~~ | ~~Zurich~~ | Automated — Umantis |
+| ~~Allianz~~ | ~~Zurich~~ | Automated — Phenom People |
+| ~~Swiss Re~~ | ~~Zurich~~ | Automated — Playwright (internal JSON API) |
+| ~~Zurich Insurance~~ | ~~Zurich~~ | Automated — plain HTTP HTML |
+| Baloise Group | Basel | Covered by Helvetia scraper (merger complete) |
+| Partners Group | Zug | Not automated — ATS unknown |
+| Unigestion | Geneva | Not automated — ATS unknown |
+| Robeco | Zurich | Not automated — ATS unknown |
+| Systematica Investments | Geneva | Not automated — ATS unknown |
+| Amplitude Capital | Zug | Not automated — ATS unknown |
+| Fisch Asset Management | Zurich | Not automated — ATS unknown |
+| Finreon | Zurich | Not automated — ATS unknown |
 
 ### Quant & systematic funds
-| Company | HQ | Why not automated |
-|---------|----|-------------------|
-| Man Group | London / Zurich | Greenhouse EU board (`mangroup`) — automated |
-| ~~Brevan Howard~~ | ~~Geneva~~ | Workday wd3, `BH_ExternalCareers` — automated via `scrape-workday.mjs` (2026-05-16) |
-| Squarepoint Capital | Geneva | Greenhouse (`squarepointcapital`) — automated |
-| Qube Research & Technologies | London / Paris | Not on Greenhouse; ATS unknown |
+| Company | HQ | Status |
+|---------|----|--------|
+| ~~Man Group~~ | ~~London / Zurich~~ | Automated — Greenhouse (`mangroup`) |
+| ~~Brevan Howard~~ | ~~Geneva~~ | Automated — Workday (`BH_ExternalCareers`) |
+| ~~Squarepoint Capital~~ | ~~Zug / Geneva~~ | Automated — Greenhouse (`squarepointcapital`) |
+| ~~Winton Group~~ | ~~Zurich~~ | Automated — Greenhouse |
+| Qube Research & Technologies | London / Zurich | Not automated — ATS unknown |
+| Millennium Management | Geneva | Not automated — ATS unknown |
+| Systematica Investments | Geneva | Not automated — ATS unknown (also listed above) |
+| Cevian Capital | Zurich | Not automated — ATS unknown |
+| Balyasny Asset Management | London | Not automated — ATS unknown |
+| Tolomeo Capital | Zurich | Not automated — ATS unknown |
+
+### Trading firms
+| Company | HQ | Status |
+|---------|----|--------|
+| ~~IMC Trading~~ | ~~Zug / Amsterdam~~ | Automated — Greenhouse |
+| ~~Optiver~~ | ~~Zug / Amsterdam~~ | Automated — Greenhouse |
+| ~~Flow Traders~~ | ~~Amsterdam~~ | Automated — Greenhouse |
+| Tardis Group | Zug | Not automated — ATS unknown |
+| Keyrock | Zurich | Not automated — ATS unknown |
+| Jump Trading | London | Not automated — ATS unknown |
+| Five Rings | London | Not automated — ATS unknown |
+| Da Vinci Trading | Amsterdam | Not automated — ATS unknown |
+| Maven Securities | London | Not automated — ATS unknown |
+
+### Commodities & energy trading
+| Company | HQ | Status |
+|---------|----|--------|
+| Trafigura | Geneva | Not automated — ATS unknown |
+
+### Global banks (European offices)
+| Company | Relevant offices | Status |
+|---------|-----------------|--------|
+| ~~Goldman Sachs~~ | ~~Zurich, Frankfurt, London~~ | Automated — Higher GraphQL |
+| ~~JPMorgan Chase~~ | ~~Zurich, London, Frankfurt~~ | Automated — Oracle HCM CE |
+| ~~BlackRock~~ | ~~Zurich, London~~ | Automated — Radancy ATS |
+| ~~Morgan Stanley~~ | ~~London, Frankfurt, Paris~~ | Automated — Workday wd5 |
+| ~~Deutsche Bank~~ | ~~Frankfurt, London~~ | Automated — Beesite graduate API |
+| ~~Schroders~~ | ~~London, Zurich~~ | Automated — Oracle HCM CE |
+| ~~BNP Paribas~~ | ~~Paris, London~~ | Automated — WordPress REST API |
+| ~~Société Générale~~ | ~~Paris, Frankfurt, London~~ | Automated — CES Playwright |
+| ~~HSBC~~ | ~~London, Geneva~~ | Automated — GroupGTI / Solr |
+| ~~Lazard~~ | ~~London, Paris~~ | Automated — TAL / Oleeo |
+| Barclays | London | Not automated — ATS unknown |
+| Nomura | London | Not automated — ATS unknown |
+| Standard Chartered | London | Not automated — ATS unknown |
+| UniCredit | Milan / Munich / London | Not automated — ATS unknown |
+| Commerzbank | Frankfurt | Not automated — ATS unknown |
+| ING | Amsterdam | Not automated — ATS unknown |
+| NatWest Markets | London | Not automated — ATS unknown |
+| Jefferies | London | Not automated — ATS unknown |
+| TD Securities | London | Not automated — ATS unknown |
+| Guggenheim Partners | London | Not automated — ATS unknown |
+| SMBC | London | Not automated — ATS unknown |
+| MUFG | London | Not automated — ATS unknown |
+| BBVA | Madrid | Not automated — ATS unknown |
+| Moelis & Co | London | Not automated — ATS unknown |
+| PJT Partners | London | Not automated — ATS unknown |
+| Perella Weinberg Partners | London | Not automated — ATS unknown |
+| BNY Mellon | London | Not automated — ATS unknown |
+| Credit Agricole | Paris | Not automated — ATS unknown |
+| DWS | Frankfurt | Not automated — Workday tenant confirmed, board name unknown |
+| Bank of America | London | Not automated — ATS unknown |
+| Allianz Global Investors | Frankfurt / Paris | Likely covered by Allianz Phenom scraper |
+
+### Quant consulting & research
+| Company | HQ | Status |
+|---------|----|--------|
+| D-fine | Zurich / Frankfurt | Not automated — ATS unknown |
+| BIS (Bank for International Settlements) | Basel | Not automated — ATS unknown |
+
+### Swiss fintech & quant tech
+| Company | HQ | Status |
+|---------|----|--------|
+| SwissQuant | Zurich | Not automated — ATS unknown |
+| Alquant | Zurich | Not automated — ATS unknown |
+| InCube Systems | Zurich | Not automated — ATS unknown |
+| Flovtec | Zurich | Not automated — ATS unknown |
+| Z22 Technologies | Zurich | Not automated — ATS unknown |
 
 ### Paris asset managers
-| Company | Why not automated |
-|---------|-------------------|
-| ~~Amundi~~ | TalentSoft HTML — automated via `scrape-amundi.mjs` (2026-05-16) |
+| Company | Status |
+|---------|--------|
+| ~~Amundi~~ | Automated — TalentSoft HTML |
 
 ---
 
@@ -306,11 +379,70 @@ SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 
 ### Not yet automated ❌
 
-These companies are known targets but not yet in the daily scan. Reason noted where known.
-ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Unigestion — custom ATS, not investigated.
-Baloise Group — covered by Helvetia scraper (merger complete; all baloise.com jobs link to jobs.helvetia.com).
-Squarepoint Capital — custom site (squarepoint-capital.com), no standard ATS detected.
-Qube Research & Technologies — ATS unknown.
-RAM Active Investments — custom site (ram-ai.com), no standard ATS detected.
-Worldquant — custom site (worldquant.com), no standard ATS detected.
+**Swiss banks & private banks**
+ZKB (Zürcher Kantonalbank) — refline.ch custom ATS, needs scraper
+EFG International — ATS unknown
+Citi (Zurich / London) — Taleo ATS, needs Playwright
+
+**Swiss asset managers & insurers**
+Partners Group — ATS unknown
+Unigestion — ATS unknown
+Robeco (Zurich) — ATS unknown
+Amplitude Capital — ATS unknown
+Fisch Asset Management — ATS unknown
+Finreon — ATS unknown
+
+**Quant & systematic funds**
+Qube Research & Technologies — ATS unknown
+Millennium Management (Geneva) — ATS unknown
+Cevian Capital — ATS unknown
+Balyasny Asset Management — ATS unknown
+Tolomeo Capital — ATS unknown
+
+**Trading firms**
+Tardis Group — ATS unknown
+Keyrock — ATS unknown
+Jump Trading — ATS unknown
+Five Rings — ATS unknown
+Da Vinci Trading — ATS unknown
+Maven Securities — ATS unknown
+
+**Commodities**
+Trafigura (Geneva) — ATS unknown
+
+**Global banks (not yet automated)**
+Barclays — ATS unknown
+Nomura — ATS unknown
+Standard Chartered — ATS unknown
+UniCredit — ATS unknown
+Commerzbank — ATS unknown
+ING — ATS unknown
+NatWest Markets — ATS unknown
+Jefferies — ATS unknown
+TD Securities — ATS unknown
+Guggenheim Partners — ATS unknown
+SMBC — ATS unknown
+MUFG — ATS unknown
+BBVA — ATS unknown
+Moelis & Co — ATS unknown
+PJT Partners — ATS unknown
+Perella Weinberg Partners — ATS unknown
+BNY Mellon — ATS unknown
+Credit Agricole — ATS unknown
+DWS — Workday tenant confirmed alive, board name unknown
+Bank of America — ATS unknown
+
+**Quant consulting & research**
+D-fine (Zurich / Frankfurt) — ATS unknown
+BIS (Bank for International Settlements, Basel) — ATS unknown
+
+**Swiss fintech & quant tech**
+SwissQuant — ATS unknown
+Alquant — ATS unknown
+InCube Systems — ATS unknown
+Flovtec — ATS unknown
+Z22 Technologies — ATS unknown
+
+**Other (lower priority / previously noted)**
+RAM Active Investments — custom site (ram-ai.com)
+Worldquant — custom site (worldquant.com)
