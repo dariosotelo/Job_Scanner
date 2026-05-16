@@ -85,6 +85,12 @@ const COMPANIES = [
       ],
     },
   },
+  {
+    tenant:   'gam',
+    instance: 'wd3',
+    board:    'GAM',
+    name:     'GAM Investments',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];

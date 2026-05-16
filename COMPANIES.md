@@ -132,6 +132,9 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Vontobel | Workday | 0 | — | Added 2026-05-14; 47 jobs live on API |
 | Julius Baer | Workday (×2 boards) | 0 | — | Added 2026-05-14; 1 match in dry-run (Market Risk Controller, Zurich) |
 | HSBC | GroupGTI / Solr (plain HTTP) | 0 | — | Added 2026-05-16; ~12 jobs currently, mostly APAC. London/Frankfurt roles auto-caught when posted. |
+| GAM Investments | Workday | 0 | — | Added 2026-05-16; 2 jobs live (senior roles, no current matches) |
+| Société Générale | Playwright / CES | 0 | — | Added 2026-05-16; 242 EN Trainee+Internship roles; 1 dry-run match (Structured Products, Frankfurt) |
+| Amundi | TalentSoft HTML | 0 | — | Added 2026-05-16; 134 jobs across France/Germany/UK/Luxembourg; 1 dry-run match |
 
 ---
 
@@ -158,7 +161,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Company | HQ | Why not automated |
 |---------|----|-------------------|
 | Partners Group | Zug | Custom ATS |
-| GAM Investments | Zurich | Custom ATS |
+| ~~GAM Investments~~ | ~~Zurich~~ | Workday (`gam.wd3`, board: `GAM`) — automated via `scrape-workday.mjs` |
 | Swiss Life Asset Managers | Zurich | Custom ATS |
 | Unigestion | Geneva | Custom ATS |
 | Leonteq | Zurich | Custom ATS |
@@ -193,7 +196,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 ### Paris asset managers
 | Company | Why not automated |
 |---------|-------------------|
-| Amundi | Custom ATS — Workday board name not yet found |
+| ~~Amundi~~ | TalentSoft HTML — automated via `scrape-amundi.mjs` (2026-05-16) |
 
 ---
 
@@ -289,13 +292,12 @@ Deutsche Bank — Beesite graduate search API (plain HTTP, ~21 graduate/internsh
 HSBC — GroupGTI / Solr API (plain HTTP GET, hsbcearlycareers.groupgti.com, ~12 jobs)
 Société Générale — CES / search-profile API (Playwright, OAuth token captured from page auto-search, ~242 Trainee+Internship roles)
 Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxembourg, ~134 jobs)
+GAM Investments — Workday API (wd3 instance, GAM board, ~2 jobs)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Amundi — Workday, board name not found yet.
-GAM Investments — custom ATS, not investigated.
 Swiss Life Asset Managers — custom ATS, not investigated.
 Unigestion — custom ATS, not investigated.
 Leonteq — custom ATS, not investigated.
