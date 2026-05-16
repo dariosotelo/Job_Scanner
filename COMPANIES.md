@@ -138,6 +138,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Amundi | TalentSoft HTML | 0 | — | Added 2026-05-16; 134 jobs across France/Germany/UK/Luxembourg; 1 dry-run match |
 | Swiss Life Asset Managers | Workday | 0 | — | Added 2026-05-16; 46 jobs; 2 dry-run matches (Praktikant Asset Mgmt Frankfurt; Stage Quant Risk Analyst Paris) |
 | Leonteq | Custom JSON API | 0 | — | Added 2026-05-16; 21 jobs; 1 dry-run match (Graduate Program Retail Flow Trading, Zürich). Note: location normalised — API returns "Zürich" (umlaut). |
+| SIX Group | SuccessFactors RMK HTML | 0 | — | Added 2026-05-16; 108 jobs; 0 current matches (Zurich internship present but no positive keyword hit; relevant roles appear when posted) |
 
 ---
 
@@ -171,7 +172,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | Swiss Re | Zurich | Custom ATS |
 | Zurich Insurance Group | Zurich | Custom ATS |
 | Baloise Group | Basel | Merging with Helvetia in 2026 — monitor both |
-| SIX Group | Zurich | Custom ATS |
+| ~~SIX Group~~ | ~~Zurich~~ | SuccessFactors RMK (`jobs.six-group.com`) — automated via `scrape-six.mjs` (2026-05-16) |
 
 ### Global banks (European offices)
 | Company | Relevant offices | Why not automated |
@@ -298,6 +299,7 @@ Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxem
 GAM Investments — Workday API (wd3 instance, GAM board, ~2 jobs)
 Swiss Life Asset Managers — Workday API (wd3 instance, Swiss_Life_Asset_Managers_Career_Site board, ~46 jobs)
 Leonteq — custom JSON API (careers.leonteq.com/publishedJobs.php, ~21 jobs)
+SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 
 ### Not yet automated ❌
 

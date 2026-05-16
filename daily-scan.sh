@@ -74,7 +74,10 @@ node scrape-amundi.mjs >> "$LOG" 2>&1
 # 22. Leonteq scraper (custom JSON API, plain HTTP)
 node scrape-leonteq.mjs >> "$LOG" 2>&1
 
-# 23. Notify Telegram if anything new was found today
+# 23. SIX Group scraper (SuccessFactors RMK, server-rendered HTML)
+node scrape-six.mjs >> "$LOG" 2>&1
+
+# 24. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"
