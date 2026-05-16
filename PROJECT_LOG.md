@@ -1450,6 +1450,25 @@ The French-language postings are correctly blocked by the negative title filter
 
 ---
 
+### 47. Swiss Life Asset Managers added to prospective.ch scraper — 2026-05-16
+
+**ATS discovery:** `https://www.swisslife-am.com/en/home/careers/jobs.html` is Cloudflare-protected.
+Headless Playwright blocked. Non-headless browser loaded the page and revealed an iframe at:
+`https://ohws.prospective.ch/public/v1/careercenter/1005705/?lang=en`
+Same platform as Helvetia and Generali Switzerland (careercenter ID `1005705`).
+
+**HTML format difference:** The iframe HTML uses `<a class="job" href="URL">...<h2>Title</h2>...<span><img>Location</span>` 
+rather than the `title` attribute format used by Helvetia/Generali. Updated `parseJobs()` in 
+`scrape-prospective.mjs` to handle both formats. Added URL deduplication (the page renders 
+the job list twice — once in a "short" section and once in full).
+
+**Results:** 35 unique jobs scraped. 2 dry-run matches:
+- "Praktikant (m/w/d) Projektentwicklung /Asset Management" | Frankfurt, Germany
+- "Stage - Quantitative Risk Analyst H/F" | Paris, France
+
+No change to `daily-scan.sh` — Swiss Life AM now runs as part of the existing step 6 (scrape-prospective.mjs).
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
-- [ ] Investigate Workday board names for remaining companies (GAM, Swiss Life)

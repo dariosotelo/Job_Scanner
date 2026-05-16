@@ -28,8 +28,9 @@ const DRY_RUN = process.argv.includes('--dry-run');
 // url:  POST target — include required query params (lang, r, etc.)
 // name: display name
 const COMPANIES = [
-  { url: 'https://jobs.helvetia.com/ch/?lang=en&r=1', name: 'Helvetia' },
-  { url: 'https://jobs.generali.ch/?lang=en',         name: 'Generali Switzerland' },
+  { url: 'https://jobs.helvetia.com/ch/?lang=en&r=1',                              name: 'Helvetia' },
+  { url: 'https://jobs.generali.ch/?lang=en',                                      name: 'Generali Switzerland' },
+  { url: 'https://ohws.prospective.ch/public/v1/careercenter/1005705/?lang=en',    name: 'Swiss Life Asset Managers' },
   // Add more prospective.ch companies, e.g.:
   // { url: 'https://jobs.example.com/ch/?lang=en', name: 'Example' },
 ];
@@ -120,27 +121,41 @@ function appendToHistory(offers) {
 
 function parseJobs(html, companyName) {
   const jobs  = [];
-  // Match <a> tags containing a job-vacancies href — class/href/title order varies per company
-  const blockRegex = /<a\s+[^>]*href="(https:\/\/[^"]*\/job-vacancies\/[^"]+)"[^>]*title="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g;
 
+  // Format 1: Helvetia/Generali — <a href=".../job-vacancies/..." title="Title">
+  const blockRegex = /<a\s+[^>]*href="(https:\/\/[^"]*\/job-vacancies\/[^"]+)"[^>]*title="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g;
   let match;
   while ((match = blockRegex.exec(html)) !== null) {
     const url   = match[1];
     const title = match[2];
     const inner = match[3];
-
-    // Location is in the second <p> inside columnWrapper
     const pMatches = [...inner.matchAll(/<p>([\s\S]*?)<\/p>/g)];
     let location = '';
     if (pMatches.length >= 2) {
       location = pMatches[1][1].replace(/<[^>]+>/g, '').trim()
         .split('\n').map(l => l.trim()).filter(Boolean).join(', ');
     }
-
     jobs.push({ title, url, location, company: companyName });
   }
 
-  return jobs;
+  // Format 2: Swiss Life AM — <a class="job" href="URL">...<h2>Title</h2>...<span><img>Location</span>
+  const swissRegex = /<a\s+class="job"\s+href="(https:\/\/[^"]+)"[^>]*>[\s\S]*?<h2>([^<]+)<\/h2>[\s\S]*?<span>[^<]*<img[^>]+>([^<]+)<\/span>/g;
+  while ((match = swissRegex.exec(html)) !== null) {
+    jobs.push({
+      title:    match[2].trim(),
+      url:      match[1],
+      location: match[3].trim(),
+      company:  companyName,
+    });
+  }
+
+  // Deduplicate by URL (some pages render the job list twice)
+  const seen = new Set();
+  return jobs.filter(j => {
+    if (seen.has(j.url)) return false;
+    seen.add(j.url);
+    return true;
+  });
 }
 
 // ── Scraper ───────────────────────────────────────────────────────

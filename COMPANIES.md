@@ -79,6 +79,7 @@ Swiss career platform. URL pattern: `https://jobs.{company}.com/ch/?lang=en`
 |---------|-----|-----------|
 | Helvetia | `https://jobs.helvetia.com/ch/?lang=en&r=1` | Careers page link |
 | Generali Switzerland | `https://jobs.generali.ch/?lang=en` | Careers page link |
+| Swiss Life Asset Managers | `https://ohws.prospective.ch/public/v1/careercenter/1005705/?lang=en` | swisslife-am.com embeds this as an iframe; HTML format differs (h2/span instead of title attr) |
 
 ### Phenom People (Allianz)
 Fully client-side rendered. No server-side filtering via URL params.
@@ -135,6 +136,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | GAM Investments | Workday | 0 | — | Added 2026-05-16; 2 jobs live (senior roles, no current matches) |
 | Société Générale | Playwright / CES | 0 | — | Added 2026-05-16; 242 EN Trainee+Internship roles; 1 dry-run match (Structured Products, Frankfurt) |
 | Amundi | TalentSoft HTML | 0 | — | Added 2026-05-16; 134 jobs across France/Germany/UK/Luxembourg; 1 dry-run match |
+| Swiss Life Asset Managers | prospective.ch | 0 | — | Added 2026-05-16; 35 jobs; 2 dry-run matches (Praktikant Asset Mgmt Frankfurt; Stage Quant Risk Analyst Paris) |
 
 ---
 
@@ -162,7 +164,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 |---------|----|-------------------|
 | Partners Group | Zug | Custom ATS |
 | ~~GAM Investments~~ | ~~Zurich~~ | Workday (`gam.wd3`, board: `GAM`) — automated via `scrape-workday.mjs` |
-| Swiss Life Asset Managers | Zurich | Custom ATS |
+| ~~Swiss Life Asset Managers~~ | ~~Zurich~~ | prospective.ch (careercenter ID 1005705) — automated via `scrape-prospective.mjs` (2026-05-16) |
 | Unigestion | Geneva | Custom ATS |
 | Leonteq | Zurich | Custom ATS |
 | Swiss Re | Zurich | Custom ATS |
@@ -293,12 +295,12 @@ HSBC — GroupGTI / Solr API (plain HTTP GET, hsbcearlycareers.groupgti.com, ~12
 Société Générale — CES / search-profile API (Playwright, OAuth token captured from page auto-search, ~242 Trainee+Internship roles)
 Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxembourg, ~134 jobs)
 GAM Investments — Workday API (wd3 instance, GAM board, ~2 jobs)
+Swiss Life Asset Managers — prospective.ch scraper (careercenter ID 1005705, ~35 jobs)
 
 ### Not yet automated ❌
 
 These companies are known targets but not yet in the daily scan. Reason noted where known.
 ZKB (Zürcher Kantonalbank) — uses refline.ch, a Swiss niche ATS. Needs a custom scraper.
-Swiss Life Asset Managers — custom ATS, not investigated.
 Unigestion — custom ATS, not investigated.
 Leonteq — custom ATS, not investigated.
 SIX Group — custom ATS, not investigated.
