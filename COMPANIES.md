@@ -54,6 +54,7 @@ Critical: `limit` must be ≤ 20 (server returns 400 otherwise). `total` is only
 | Rothschild & Co | `rothschildandco` | `wd3` | `Rothschildandco_Lateral` | Web search for their Workday URL |
 | Vontobel | `vontobel` | `wd3` | `Vontobel_External_Career` | Extracted from careers page source (`vontobel.wd3.myworkdayjobs.com/...`) |
 | Dimensional Fund Advisors | `dimensional` | `wd5` | `DFA_Careers` | careers.dimensional.com links to `dimensional.wd5.myworkdayjobs.com/DFA_Careers` |
+| Swiss Life Asset Managers | `swisslife` | `wd3` | `Swiss_Life_Asset_Managers_Career_Site` | User found direct Workday URL; `de-DE` in path is language prefix, board follows it |
 
 Attempted but board name unknown (tenant confirmed alive via 422 response):
 - DWS, AXA, Société Générale, Amundi
@@ -79,7 +80,6 @@ Swiss career platform. URL pattern: `https://jobs.{company}.com/ch/?lang=en`
 |---------|-----|-----------|
 | Helvetia | `https://jobs.helvetia.com/ch/?lang=en&r=1` | Careers page link |
 | Generali Switzerland | `https://jobs.generali.ch/?lang=en` | Careers page link |
-| Swiss Life Asset Managers | `https://ohws.prospective.ch/public/v1/careercenter/1005705/?lang=en` | swisslife-am.com embeds this as an iframe; HTML format differs (h2/span instead of title attr) |
 
 ### Phenom People (Allianz)
 Fully client-side rendered. No server-side filtering via URL params.
@@ -136,7 +136,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | GAM Investments | Workday | 0 | — | Added 2026-05-16; 2 jobs live (senior roles, no current matches) |
 | Société Générale | Playwright / CES | 0 | — | Added 2026-05-16; 242 EN Trainee+Internship roles; 1 dry-run match (Structured Products, Frankfurt) |
 | Amundi | TalentSoft HTML | 0 | — | Added 2026-05-16; 134 jobs across France/Germany/UK/Luxembourg; 1 dry-run match |
-| Swiss Life Asset Managers | prospective.ch | 0 | — | Added 2026-05-16; 35 jobs; 2 dry-run matches (Praktikant Asset Mgmt Frankfurt; Stage Quant Risk Analyst Paris) |
+| Swiss Life Asset Managers | Workday | 0 | — | Added 2026-05-16; 46 jobs; 2 dry-run matches (Praktikant Asset Mgmt Frankfurt; Stage Quant Risk Analyst Paris) |
 
 ---
 
@@ -164,7 +164,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 |---------|----|-------------------|
 | Partners Group | Zug | Custom ATS |
 | ~~GAM Investments~~ | ~~Zurich~~ | Workday (`gam.wd3`, board: `GAM`) — automated via `scrape-workday.mjs` |
-| ~~Swiss Life Asset Managers~~ | ~~Zurich~~ | prospective.ch (careercenter ID 1005705) — automated via `scrape-prospective.mjs` (2026-05-16) |
+| ~~Swiss Life Asset Managers~~ | ~~Zurich~~ | Workday (`swisslife.wd3`, board: `Swiss_Life_Asset_Managers_Career_Site`) — automated via `scrape-workday.mjs` (2026-05-16) |
 | Unigestion | Geneva | Custom ATS |
 | Leonteq | Zurich | Custom ATS |
 | Swiss Re | Zurich | Custom ATS |
@@ -295,7 +295,7 @@ HSBC — GroupGTI / Solr API (plain HTTP GET, hsbcearlycareers.groupgti.com, ~12
 Société Générale — CES / search-profile API (Playwright, OAuth token captured from page auto-search, ~242 Trainee+Internship roles)
 Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxembourg, ~134 jobs)
 GAM Investments — Workday API (wd3 instance, GAM board, ~2 jobs)
-Swiss Life Asset Managers — prospective.ch scraper (careercenter ID 1005705, ~35 jobs)
+Swiss Life Asset Managers — Workday API (wd3 instance, Swiss_Life_Asset_Managers_Career_Site board, ~46 jobs)
 
 ### Not yet automated ❌
 

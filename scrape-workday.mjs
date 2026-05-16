@@ -91,6 +91,12 @@ const COMPANIES = [
     board:    'GAM',
     name:     'GAM Investments',
   },
+  {
+    tenant:   'swisslife',
+    instance: 'wd3',
+    board:    'Swiss_Life_Asset_Managers_Career_Site',
+    name:     'Swiss Life Asset Managers',
+  },
   // Add more as discovered, e.g.:
   // { tenant: 'goldmansachs', instance: 'wd1', board: 'campus', name: 'Goldman Sachs' },
 ];

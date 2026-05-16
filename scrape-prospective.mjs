@@ -28,9 +28,8 @@ const DRY_RUN = process.argv.includes('--dry-run');
 // url:  POST target — include required query params (lang, r, etc.)
 // name: display name
 const COMPANIES = [
-  { url: 'https://jobs.helvetia.com/ch/?lang=en&r=1',                              name: 'Helvetia' },
-  { url: 'https://jobs.generali.ch/?lang=en',                                      name: 'Generali Switzerland' },
-  { url: 'https://ohws.prospective.ch/public/v1/careercenter/1005705/?lang=en',    name: 'Swiss Life Asset Managers' },
+  { url: 'https://jobs.helvetia.com/ch/?lang=en&r=1', name: 'Helvetia' },
+  { url: 'https://jobs.generali.ch/?lang=en',         name: 'Generali Switzerland' },
   // Add more prospective.ch companies, e.g.:
   // { url: 'https://jobs.example.com/ch/?lang=en', name: 'Example' },
 ];
