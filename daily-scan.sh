@@ -71,7 +71,10 @@ node scrape-societegenerale.mjs >> "$LOG" 2>&1
 # 21. Amundi scraper (TalentSoft HTML, plain HTTP)
 node scrape-amundi.mjs >> "$LOG" 2>&1
 
-# 22. Notify Telegram if anything new was found today
+# 22. Leonteq scraper (custom JSON API, plain HTTP)
+node scrape-leonteq.mjs >> "$LOG" 2>&1
+
+# 23. Notify Telegram if anything new was found today
 node notify-telegram.mjs >> "$LOG" 2>&1
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

@@ -137,6 +137,7 @@ These run every day via `bash daily-scan.sh` with no manual intervention.
 | Société Générale | Playwright / CES | 0 | — | Added 2026-05-16; 242 EN Trainee+Internship roles; 1 dry-run match (Structured Products, Frankfurt) |
 | Amundi | TalentSoft HTML | 0 | — | Added 2026-05-16; 134 jobs across France/Germany/UK/Luxembourg; 1 dry-run match |
 | Swiss Life Asset Managers | Workday | 0 | — | Added 2026-05-16; 46 jobs; 2 dry-run matches (Praktikant Asset Mgmt Frankfurt; Stage Quant Risk Analyst Paris) |
+| Leonteq | Custom JSON API | 0 | — | Added 2026-05-16; 21 jobs; 1 dry-run match (Graduate Program Retail Flow Trading, Zürich). Note: location normalised — API returns "Zürich" (umlaut). |
 
 ---
 
@@ -166,7 +167,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | ~~GAM Investments~~ | ~~Zurich~~ | Workday (`gam.wd3`, board: `GAM`) — automated via `scrape-workday.mjs` |
 | ~~Swiss Life Asset Managers~~ | ~~Zurich~~ | Workday (`swisslife.wd3`, board: `Swiss_Life_Asset_Managers_Career_Site`) — automated via `scrape-workday.mjs` (2026-05-16) |
 | Unigestion | Geneva | Custom ATS |
-| Leonteq | Zurich | Custom ATS |
+| ~~Leonteq~~ | ~~Zurich~~ | Custom JSON API (`careers.leonteq.com/publishedJobs.php`) — automated via `scrape-leonteq.mjs` (2026-05-16) |
 | Swiss Re | Zurich | Custom ATS |
 | Zurich Insurance Group | Zurich | Custom ATS |
 | Baloise Group | Basel | Merging with Helvetia in 2026 — monitor both |
@@ -296,6 +297,7 @@ Société Générale — CES / search-profile API (Playwright, OAuth token captu
 Amundi — TalentSoft HTML (plain HTTP, jobs.amundi.com, France+Germany+UK+Luxembourg, ~134 jobs)
 GAM Investments — Workday API (wd3 instance, GAM board, ~2 jobs)
 Swiss Life Asset Managers — Workday API (wd3 instance, Swiss_Life_Asset_Managers_Career_Site board, ~46 jobs)
+Leonteq — custom JSON API (careers.leonteq.com/publishedJobs.php, ~21 jobs)
 
 ### Not yet automated ❌
 
