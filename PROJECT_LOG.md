@@ -1470,5 +1470,22 @@ No change to `daily-scan.sh` — Swiss Life AM now runs as part of the existing 
 
 ---
 
+### 48. launchd PATH bug — node not found on scheduled run — 2026-05-17
+
+**Symptom:** No Telegram notification received on 2026-05-17. Log showed every scraper
+failing with `node: command not found` at 08:30. The previous day's run (2026-05-16 13:30)
+had succeeded normally and sent 3 messages (19 new jobs).
+
+**Root cause:** macOS launchd runs jobs with a minimal environment that does not include
+`/opt/homebrew/bin`. Node.js is installed via Homebrew, so `node` is not on the PATH
+when launchd invokes `daily-scan.sh` — even though it works fine in a terminal session
+where the shell initialises the full user PATH.
+
+**Fix:** Added `export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"` as the first line
+of `daily-scan.sh` after the shebang/comment, so the correct Node binary is available
+regardless of how the script is launched.
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
