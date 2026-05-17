@@ -1,6 +1,9 @@
 #!/bin/bash
 # daily-scan.sh — Scan portals + UBS + notify via Telegram if new jobs found.
 
+# Ensure Homebrew binaries (node, npx) are on PATH when run via launchd
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
 REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$REPO_DIR"
 
