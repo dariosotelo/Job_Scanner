@@ -1521,5 +1521,54 @@ personal chat (`1538570817`) are both commented out.
 
 ---
 
+### 50. Scraper error tracking + "no new jobs" notification — 2026-05-19
+
+**Motivation:** When a scraper crashes (non-zero exit), the failure was silently swallowed —
+only visible by grepping `daily-scan.log`. And when no jobs matched the filters on a given
+day, no Telegram message was sent at all, leaving uncertainty about whether the scanner ran.
+
+**Changes to `daily-scan.sh`:**
+- Introduced `run_step <label> <command>` wrapper. On non-zero exit it:
+  1. Appends the scraper label (e.g. `scrape-ubs.mjs`) to `data/last-run-failures.txt`.
+  2. Writes an `ERROR: <label> exited with code N` line to `daily-scan.log`.
+- `last-run-failures.txt` is truncated to zero bytes at the start of each run, so it only
+  ever contains failures from the most recent execution.
+- All 23 scraper steps + `notify-telegram.mjs` are now wrapped with `run_step`.
+
+**Changes to `notify-telegram.mjs`:**
+- `loadFailures()` reads `data/last-run-failures.txt` and returns an array of failed labels.
+- **No-jobs path:** sends `📭 No new jobs today — date` instead of silent exit. If scrapers
+  also failed, the failure list is appended to that same message.
+- **Jobs found path:** after sending job messages, if there were failures a separate
+  `⚠️ N scraper error(s) — date` message is sent listing each failed step.
+
+---
+
+### 51. Daily inventory summary message — 2026-05-19
+
+**Motivation:** Useful to see at a glance how many jobs are currently tracked per company,
+as a daily sanity check that scrapers are returning consistent results.
+
+**Implementation:** `buildInventoryMessage()` in `notify-telegram.mjs`:
+- Reads the full `data/scan-history.tsv` (all entries, deduplicated by URL).
+- Counts jobs per company (column index 4).
+- Sorts companies by count descending.
+- Formats as `📊 Current inventory — date` with one line per company and a total footer.
+
+The message is sent as the final Telegram message of every run — after job notifications
+and any error alert — on both the "new jobs found" and "no new jobs" paths.
+
+Example output (2026-05-19, 108 jobs across 23 companies):
+```
+JPMorgan Chase: 23
+Goldman Sachs: 14
+UBS: 11
+Morgan Stanley: 10
+...
+Total: 108 jobs across 23 companies
+```
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
