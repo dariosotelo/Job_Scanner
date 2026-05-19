@@ -119,6 +119,30 @@ async function sendTelegramMessage(text) {
   return res.json();
 }
 
+// ── Scan inventory ───────────────────────────────────────────────
+
+function buildInventoryMessage() {
+  if (!existsSync(SCAN_HISTORY_PATH)) return null;
+
+  const counts = new Map();
+  const lines = readFileSync(SCAN_HISTORY_PATH, 'utf-8').trim().split('\n');
+  for (const line of lines.slice(1)) {
+    const company = line.split('\t')[4]?.trim();
+    if (company) counts.set(company, (counts.get(company) || 0) + 1);
+  }
+  if (counts.size === 0) return null;
+
+  const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  const total = sorted.reduce((sum, [, n]) => sum + n, 0);
+
+  const rows = sorted.map(([c, n]) => `${c}: <b>${n}</b>`).join('\n');
+  return (
+    `📊 <b>Current inventory — ${today()}</b>\n\n` +
+    rows +
+    `\n\n<b>Total:</b> ${total} job${total !== 1 ? 's' : ''} across ${counts.size} compan${counts.size !== 1 ? 'ies' : 'y'}`
+  );
+}
+
 // ── Formatting ────────────────────────────────────────────────────
 
 function groupByCompany(jobs) {
@@ -220,6 +244,12 @@ async function main() {
     }
     await sendTelegramMessage(text);
     console.log(`No new jobs today (${today()}). Notification sent.`);
+    const inv = buildInventoryMessage();
+    if (inv) {
+      await new Promise(r => setTimeout(r, 1000));
+      await sendTelegramMessage(inv);
+      console.log('  Sent inventory summary.');
+    }
     return;
   }
 
@@ -243,6 +273,13 @@ async function main() {
       failures.map(f => `• ${f}`).join('\n');
     await sendTelegramMessage(errText);
     console.log(`  Sent error alert (${failures.length} failure${failures.length > 1 ? 's' : ''})`);
+  }
+
+  const inv = buildInventoryMessage();
+  if (inv) {
+    await new Promise(r => setTimeout(r, 1000));
+    await sendTelegramMessage(inv);
+    console.log('  Sent inventory summary.');
   }
 
   console.log('Done.');
