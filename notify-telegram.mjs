@@ -22,6 +22,7 @@ dotenv.config();
 
 const SCAN_HISTORY_PATH = 'data/scan-history.tsv';
 const NOTIFIED_PATH     = 'data/notified-urls.txt';
+const FAILURES_PATH     = 'data/last-run-failures.txt';
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID   = process.env.TELEGRAM_CHAT_ID;
 
@@ -60,6 +61,12 @@ function classifyJob(title) {
 
 function today() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function loadFailures() {
+  if (!existsSync(FAILURES_PATH)) return [];
+  const content = readFileSync(FAILURES_PATH, 'utf-8').trim();
+  return content ? content.split('\n').filter(Boolean) : [];
 }
 
 function loadNotifiedUrls() {
@@ -203,9 +210,16 @@ async function main() {
   }
 
   const jobs = readTodaysNewJobs();
+  const failures = loadFailures();
 
   if (jobs.length === 0) {
-    console.log(`No new jobs today (${today()}). No message sent.`);
+    let text = `📭 <b>No new jobs today — ${today()}</b>\n\nAll portals scanned. Nothing matched your filters.`;
+    if (failures.length > 0) {
+      text += `\n\n⚠️ ${failures.length} scraper${failures.length > 1 ? 's' : ''} failed:\n` +
+        failures.map(f => `• ${f}`).join('\n');
+    }
+    await sendTelegramMessage(text);
+    console.log(`No new jobs today (${today()}). Notification sent.`);
     return;
   }
 
@@ -222,6 +236,15 @@ async function main() {
   }
 
   saveNotifiedUrls(jobs.map(j => j.url));
+
+  if (failures.length > 0) {
+    await new Promise(r => setTimeout(r, 1000));
+    const errText = `⚠️ <b>${failures.length} scraper error${failures.length > 1 ? 's' : ''} — ${today()}</b>\n\n` +
+      failures.map(f => `• ${f}`).join('\n');
+    await sendTelegramMessage(errText);
+    console.log(`  Sent error alert (${failures.length} failure${failures.length > 1 ? 's' : ''})`);
+  }
+
   console.log('Done.');
 }
 
