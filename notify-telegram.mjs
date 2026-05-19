@@ -25,29 +25,35 @@ const NOTIFIED_PATH     = 'data/notified-urls.txt';
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHAT_ID   = process.env.TELEGRAM_CHAT_ID;
 
-// ── Entry-level detection ─────────────────────────────────────────
+// ── Job classification ────────────────────────────────────────────
 
-const ENTRY_LEVEL_KEYWORDS = [
-  'internship', 'intern,', ' intern ', 'intern$',
-  'summer analyst', 'winter analyst', 'spring analyst',
-  'off-cycle', 'off cycle',
+const GRADUATE_KEYWORDS = [
   'graduate programme', 'graduate program',
   'graduate analyst', 'graduate associate', 'graduate trainee',
-  'graduate talent', 'graduate rotational', 'new graduate',
+  'graduate talent', 'graduate rotational', 'new graduate', 'new grad',
   'analyst programme', 'analyst program', 'analyst trainee',
-  'junior analyst', 'junior quant', 'junior researcher', 'junior associate',
-  'entry level', 'entry-level',
-  'new grad',
-  'trainee', 'traineeship',
-  'apprentice', 'apprenticeship',
-  'working student', 'werkstudent',
-  'campus hire', 'campus recruit',
   'rotational programme', 'rotational program',
+  'campus hire', 'campus recruit',
+  'vte',
 ];
 
-function isEntryLevel(title) {
-  const t = title.toLowerCase();
-  return ENTRY_LEVEL_KEYWORDS.some(kw => t.includes(kw.replace('$', '')));
+const INTERNSHIP_KEYWORDS = [
+  'internship', ' intern ', 'intern,',
+  'summer analyst', 'winter analyst', 'spring analyst',
+  'off-cycle', 'off cycle',
+  'stage ', 'stagiaire', 'praktikant', 'praktikum',
+  'working student', 'werkstudent',
+  'trainee', 'traineeship',
+  'apprentice', 'apprenticeship',
+];
+
+function classifyJob(title) {
+  const t = ' ' + title.toLowerCase() + ' ';
+  if (GRADUATE_KEYWORDS.some(kw => t.includes(kw))) return 'graduate';
+  // standalone "graduate" as a word
+  if (/\bgraduate\b/.test(t)) return 'graduate';
+  if (INTERNSHIP_KEYWORDS.some(kw => t.includes(kw))) return 'internship';
+  return 'other';
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
@@ -127,54 +133,58 @@ function renderCompanyBlock(company, jobs) {
 }
 
 function buildMessages(allJobs, date) {
-  const entryJobs = allJobs.filter(j => isEntryLevel(j.title));
+  const graduateJobs   = allJobs.filter(j => classifyJob(j.title) === 'graduate');
+  const internshipJobs = allJobs.filter(j => classifyJob(j.title) === 'internship');
+  const otherJobs      = allJobs.filter(j => classifyJob(j.title) === 'other');
 
-  // Section 1 header
-  const sec1Header = allJobs.length === 1
-    ? `🔔 <b>New job posting — ${date}</b>`
-    : `🔔 <b>${allJobs.length} new job postings — ${date}</b>`;
+  const sections = [];
 
-  // Section 2 header (only if there are entry-level matches)
-  const sec2Header = entryJobs.length > 0
-    ? `🎓 <b>Graduate &amp; internship positions (${entryJobs.length})</b>`
-    : null;
+  if (graduateJobs.length > 0) {
+    sections.push({
+      header: `🎓 <b>${graduateJobs.length} graduate position${graduateJobs.length > 1 ? 's' : ''} — ${date}</b>`,
+      jobs: graduateJobs,
+    });
+  }
+  if (internshipJobs.length > 0) {
+    sections.push({
+      header: `📋 <b>${internshipJobs.length} internship${internshipJobs.length > 1 ? 's' : ''} — ${date}</b>`,
+      jobs: internshipJobs,
+    });
+  }
+  if (otherJobs.length > 0) {
+    sections.push({
+      header: `🔔 <b>${otherJobs.length} other match${otherJobs.length > 1 ? 'es' : ''} — ${date}</b>`,
+      jobs: otherJobs,
+    });
+  }
 
-  // Build company blocks for each section
-  const byCompany1 = groupByCompany(allJobs);
-  const blocks1 = [...byCompany1.entries()].map(([c, js]) => renderCompanyBlock(c, js));
+  // If nothing was classified (shouldn't happen), fall back to one block
+  if (sections.length === 0) {
+    sections.push({
+      header: `🔔 <b>${allJobs.length} new job${allJobs.length > 1 ? 's' : ''} — ${date}</b>`,
+      jobs: allJobs,
+    });
+  }
 
-  const byCompany2 = groupByCompany(entryJobs);
-  const blocks2 = sec2Header
-    ? [...byCompany2.entries()].map(([c, js]) => renderCompanyBlock(c, js))
-    : [];
-
-  // Chunk everything so no single message exceeds ~3800 chars (buffer for headers)
   const MAX = 3800;
   const messages = [];
 
-  function flush(headerLine, bodyBlocks, isFirstChunk) {
-    let current = isFirstChunk ? `${headerLine}\n\n` : `${headerLine} (continued)\n\n`;
+  for (const { header, jobs } of sections) {
+    const blocks = [...groupByCompany(jobs).entries()].map(([c, js]) => renderCompanyBlock(c, js));
+    let current = `${header}\n\n`;
     let first = true;
-    for (const block of bodyBlocks) {
+    for (const block of blocks) {
       const sep = first ? '' : '\n\n';
       if (!first && current.length + sep.length + block.length > MAX) {
         messages.push(current.trimEnd());
-        current = `${headerLine} (continued)\n\n${block}`;
+        current = `${header} (continued)\n\n${block}`;
         first = false;
         continue;
       }
       current += sep + block;
       first = false;
     }
-    if (current.trim().length > headerLine.length + 15) {
-      messages.push(current.trimEnd());
-    }
-  }
-
-  flush(sec1Header, blocks1, true);
-
-  if (sec2Header && blocks2.length > 0) {
-    flush(sec2Header, blocks2, true);
+    messages.push(current.trimEnd());
   }
 
   return messages;
@@ -199,8 +209,9 @@ async function main() {
     return;
   }
 
-  const entryCount = jobs.filter(j => isEntryLevel(j.title)).length;
-  console.log(`${jobs.length} new job(s) found (${entryCount} entry-level) — building messages...`);
+  const gradCount = jobs.filter(j => classifyJob(j.title) === 'graduate').length;
+  const internCount = jobs.filter(j => classifyJob(j.title) === 'internship').length;
+  console.log(`${jobs.length} new job(s) found (${gradCount} graduate, ${internCount} internship) — building messages...`);
 
   const messages = buildMessages(jobs, today());
 
