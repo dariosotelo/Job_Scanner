@@ -1032,6 +1032,9 @@ multiple messages.
 **No change to `portals.yml`:** the broad filter remains in place. The two-section format
 gives both full visibility and a highlighted shortlist in the same daily message.
 
+> **Superseded by entry 49** — the two-section format was replaced with a three-section
+> Graduate | Internship | Other split on 2026-05-16.
+
 ---
 
 ### Current scraper coverage summary (updated 2026-05-15)
@@ -1484,6 +1487,37 @@ where the shell initialises the full user PATH.
 **Fix:** Added `export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"` as the first line
 of `daily-scan.sh` after the shebang/comment, so the correct Node binary is available
 regardless of how the script is launched.
+
+---
+
+### 49. notify-telegram.mjs — three-section message format (Graduate | Internship | Other) — 2026-05-16
+
+**Background:** The previous `notify-telegram.mjs` sent two messages per run: one with all
+matching jobs, and a second "entry-level" block combining graduate and internship roles. This
+was redundant (every job appeared twice) and blurred the distinction between graduate
+programmes and internships.
+
+**Change:** Replaced `isEntryLevel()` with `classifyJob()`, which returns one of three
+labels — `'graduate'`, `'internship'`, or `'other'` — using two keyword arrays:
+
+- `GRADUATE_KEYWORDS`: graduate programme/program, graduate analyst, new grad, analyst
+  programme, rotational programme, campus hire, VTE, etc.
+- `INTERNSHIP_KEYWORDS`: internship, intern, summer/winter/spring analyst, off-cycle,
+  stage, stagiaire, Praktikant, Praktikum, working student, Werkstudent, trainee,
+  apprentice, etc.
+
+`buildMessages()` now creates up to three separate Telegram messages:
+- 🎓 **N graduate position(s) — date**
+- 📋 **N internship(s) — date**
+- 🔔 **N other match(es) — date**
+
+Each job appears in exactly one section. Sections with zero jobs are omitted. A fallback
+single block fires only if the sections array is somehow empty (shouldn't happen in practice).
+Messages split at 3 800 characters as before, with "(continued)" headers on overflow chunks.
+
+**Telegram channel:** Also switched active `TELEGRAM_CHAT_ID` in `.env` to the new Jobi
+broadcast channel (`-1003993517523`); the old compromised group (`-1003546760303`) and the
+personal chat (`1538570817`) are both commented out.
 
 ---
 
