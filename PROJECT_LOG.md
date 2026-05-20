@@ -1596,5 +1596,36 @@ let text = existsSync(PIPELINE_PATH)
 
 ---
 
+### 53. Citi scraper added — TalentBrew/Radancy, Switzerland location page — 2026-05-20
+
+Built `scrape-citi.mjs` (step 24 in `daily-scan.sh`). Citi uses **TalentBrew by Radancy**
+(same ATS as BlackRock), not Taleo as previously assumed. The site is fully server-rendered —
+plain HTTP GET, no Playwright needed.
+
+- **Endpoint:** `https://jobs.citi.com/location/switzerland-jobs/287/2658434/2`
+  (org ID 287, Switzerland GeoName ID 2658434, facet type 2 = country level)
+- **Coverage:** Zurich + Geneva (all Switzerland jobs on one page, currently 8)
+- **Parsing:** regex on `<li class="sr-job-item">` blocks; title from `<a class="sr-job-item__link">`,
+  location from `<span class="sr-job-item__facet-icon sr-job-location">`
+- **Pagination:** `?p=N` appended to the location URL; total pages from `data-total-pages`
+  attribute on `<section id="search-results">`
+
+### 54. portals.yml filter fix — Sales removed from negatives, Trading + Structuring added to positives — 2026-05-20
+
+**Problem:** The role "Markets - Sales, Trading and Structuring, Off-Cycle Internship,
+Switzerland - Zurich, 2026" (Citi) was blocked because `Sales` was in the negative keyword
+list. In finance, "Sales & Trading" is a core front-office division, so a bare `Sales`
+negative is too broad.
+
+**Fix in `portals.yml`:**
+- Removed `Sales` from `title_filter.negative`
+- Added `Trading` and `Structuring` to `title_filter.positive`
+
+Pure sales roles (e.g. "Sales Manager", "Sales Associate") still won't pass — they don't
+match any positive keyword. The negative list still blocks `Relationship Manager` for
+non-quant coverage roles.
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
