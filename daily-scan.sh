@@ -95,7 +95,10 @@ run_step "scrape-leonteq.mjs" node scrape-leonteq.mjs
 # 23. SIX Group scraper (SuccessFactors RMK, server-rendered HTML)
 run_step "scrape-six.mjs" node scrape-six.mjs
 
-# 24. Notify Telegram — new jobs summary + any scraper errors
+# 24. Citi scraper (TalentBrew by Radancy, server-rendered HTML, Switzerland location page)
+run_step "scrape-citi.mjs" node scrape-citi.mjs
+
+# 25. Notify Telegram — new jobs summary + any scraper errors
 run_step "notify-telegram.mjs" node notify-telegram.mjs
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

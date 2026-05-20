@@ -166,7 +166,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | EFG International | Geneva / Zurich | Not automated — ATS unknown |
 | Basellandschaftliche Kantonalbank (BLKB) | Basel | Not automated — ATS unknown |
 | Banque Cantonale Vaudoise (BCV) | Lausanne | Not automated — ATS unknown |
-| Citi | Zurich / London | Not automated — Taleo ATS |
+| ~~Citi~~ | ~~Zurich / London~~ | ~~Not automated — Taleo ATS~~ — moved to automated (2026-05-20) |
 
 ### Swiss asset managers & insurers
 | Company | HQ | Status |
@@ -299,7 +299,7 @@ Workday/Greenhouse/Umantis patterns to determine if automation is possible.
 | Lombard Odier | Workday (`lombardodier.wd3`, board: `Lombard_Odier_Careers`) | `lombardodier.wd3.myworkdayjobs.com/Lombard_Odier_Careers` |
 | Pictet | SuccessFactors (company code: `banquepict`) | `career5.successfactors.eu/career?company=banquepict` |
 | ZKB | refline.ch (custom ATS, needs scraper) | `apply.refline.ch/792841/search.html` |
-| Citi Zurich | Taleo | `jobs.citi.com/search-jobs/Zurich` |
+| ~~Citi Zurich~~ | ~~Taleo~~ | Automated via `scrape-citi.mjs` — TalentBrew/Radancy, Switzerland location page, plain HTTP |
 | LGT Capital Partners | Custom | `lgtcp.com/en/careers/current-vacancies/` |
 | Squarepoint Capital | Greenhouse (`squarepointcapital`) | `squarepoint-capital.com/open-opportunities` (Zug/London) |
 | Worldquant | Custom | `worldquant.com/career-listing/?location=zug-switzerland` |
@@ -382,7 +382,7 @@ SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
 **Swiss banks & private banks**
 ZKB (Zürcher Kantonalbank) — refline.ch custom ATS, needs scraper
 EFG International — ATS unknown
-Citi (Zurich / London) — Taleo ATS, needs Playwright
+~~Citi (Zurich / London)~~ — automated via scrape-citi.mjs (TalentBrew/Radancy, plain HTTP)
 
 **Swiss asset managers & insurers**
 Partners Group — ATS unknown
