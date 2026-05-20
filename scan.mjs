@@ -211,7 +211,9 @@ function loadSeenCompanyRoles() {
 function appendToPipeline(offers) {
   if (offers.length === 0) return;
 
-  let text = readFileSync(PIPELINE_PATH, 'utf-8');
+  let text = existsSync(PIPELINE_PATH)
+    ? readFileSync(PIPELINE_PATH, 'utf-8')
+    : '# Job Pipeline\n\n## Pendientes\n\n## Procesadas\n';
 
   // Find "## Pendientes" section and append after it
   const marker = '## Pendientes';
