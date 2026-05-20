@@ -1570,5 +1570,31 @@ Total: 108 jobs across 23 companies
 
 ---
 
+### 52. scan.mjs crash — missing data/pipeline.md — 2026-05-20
+
+**Note:** Job_Scanner was originally forked from a prior project called **Santifer**. Some
+legacy artefacts remain from that codebase (e.g. Spanish section headers `## Pendientes` /
+`## Procesadas` in `pipeline.md`, the pipeline workflow itself).
+
+**Symptom:** `scan.mjs` exited with code 1 on the 08:30 scheduled run. Log showed:
+```
+Fatal: ENOENT: no such file or directory, open 'data/pipeline.md'
+```
+
+**Root cause:** `appendToPipeline()` in `scan.mjs` called `readFileSync(PIPELINE_PATH)`
+unconditionally. The function that *reads* URLs from the pipeline (line 175) had an
+`existsSync` guard, but the *write* path did not. `data/pipeline.md` was absent from the
+`data/` directory (likely never copied over from Santifer or deleted at some point).
+
+**Fix:** `appendToPipeline()` now initialises the file with a blank structure if missing:
+```javascript
+let text = existsSync(PIPELINE_PATH)
+  ? readFileSync(PIPELINE_PATH, 'utf-8')
+  : '# Job Pipeline\n\n## Pendientes\n\n## Procesadas\n';
+```
+`data/pipeline.md` was also created locally with that same blank structure.
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared
