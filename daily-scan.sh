@@ -98,7 +98,10 @@ run_step "scrape-six.mjs" node scrape-six.mjs
 # 24. Citi scraper (TalentBrew by Radancy, server-rendered HTML, Switzerland location page)
 run_step "scrape-citi.mjs" node scrape-citi.mjs
 
-# 25. Notify Telegram — new jobs summary + any scraper errors
+# 25. Partners Group scraper (IDX / connectid.cloud middleware over SuccessFactors, plain HTTP)
+run_step "scrape-partnersgroup.mjs" node scrape-partnersgroup.mjs
+
+# 26. Notify Telegram — new jobs summary + any scraper errors
 run_step "notify-telegram.mjs" node notify-telegram.mjs
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Done." >> "$LOG"

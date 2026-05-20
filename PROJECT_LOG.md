@@ -1627,5 +1627,22 @@ non-quant coverage roles.
 
 ---
 
+### 55. Partners Group scraper added — IDX/connectid.cloud over SuccessFactors — 2026-05-20
+
+Built `scrape-partnersgroup.mjs` (step 25 in `daily-scan.sh`).
+
+Partners Group uses **IDX** (`connectid.cloud`), a Vue.js middleware ATS that sits in front
+of SAP SuccessFactors (`career5.successfactors.eu/career?company=PartnersGroup`). The IDX
+API is called directly — plain HTTP POST, no browser needed.
+
+- **Endpoint:** `POST https://idxatsportal-prod-api.connectid.cloud/api/clients/67/jobs`
+- **Auth:** static Bearer token embedded in `partnersgroup.com/en/javascripts/shared/jobs-ats.js` (publicly readable)
+- **Pagination:** `{ page: N, pageSize: 100 }` body; `meta.totalPages` governs loop
+- **Job URL:** `https://www.partnersgroup.com/en/careers/open-positions/job-details/{jobreqid}`
+- **Coverage:** all 86 global jobs fetched, filtered to Switzerland (Zug) + other `allowLoc` entries
+- **Dry-run matches (2026-05-20):** Junior Risk Manager (Zug), Quantitative Risk Manager (Zug)
+
+---
+
 ### To-do / Next steps
 - [ ] Test prospective.ch scraper (Helvetia + Generali) on a cold-start run — rate limit from 2026-05-13 debug session should have cleared

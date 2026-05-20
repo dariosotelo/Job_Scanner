@@ -182,7 +182,7 @@ scraping. To automate them, the Workday board name needs to be found from their 
 | ~~Swiss Re~~ | ~~Zurich~~ | Automated — Playwright (internal JSON API) |
 | ~~Zurich Insurance~~ | ~~Zurich~~ | Automated — plain HTTP HTML |
 | Baloise Group | Basel | Covered by Helvetia scraper (merger complete) |
-| Partners Group | Zug | Not automated — ATS unknown |
+| ~~Partners Group~~ | ~~Zug~~ | Automated — IDX/connectid.cloud over SuccessFactors, plain HTTP (2026-05-20) |
 | Unigestion | Geneva | Not automated — ATS unknown |
 | Robeco | Zurich | Not automated — ATS unknown |
 | Systematica Investments | Geneva | Not automated — ATS unknown |
@@ -376,16 +376,16 @@ Swiss Life Asset Managers — Workday API (wd3 instance, Swiss_Life_Asset_Manage
 Brevan Howard — Workday API (wd3 instance, BH_ExternalCareers board, ~8 jobs)
 Leonteq — custom JSON API (careers.leonteq.com/publishedJobs.php, ~21 jobs)
 SIX Group — SuccessFactors RMK HTML (jobs.six-group.com, ~108 jobs, 100/page)
+Citi (Zurich / London) - automated via scrape-citi.mjs (TalentBrew/Radancy, plain HTTP)
 
 ### Not yet automated ❌
 
 **Swiss banks & private banks**
 ZKB (Zürcher Kantonalbank) — refline.ch custom ATS, needs scraper
 EFG International — ATS unknown
-~~Citi (Zurich / London)~~ — automated via scrape-citi.mjs (TalentBrew/Radancy, plain HTTP)
 
 **Swiss asset managers & insurers**
-Partners Group — ATS unknown
+~~Partners Group~~ — automated via scrape-partnersgroup.mjs (IDX/connectid.cloud over SuccessFactors, plain HTTP)
 Unigestion — ATS unknown
 Robeco (Zurich) — ATS unknown
 Amplitude Capital — ATS unknown
